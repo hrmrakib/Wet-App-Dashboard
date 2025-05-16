@@ -13,23 +13,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
+import Image from "next/image";
 
 export default function DashboardContent() {
   return (
-    <main className='w-full p-4 md:p-6'>
-      <section className='mb-8'>
-        <h2 className='mb-4 text-[32px] font-medium text-primary'>Overview</h2>
-        <div className='md:container mx-auto'>
-          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-            <StatCard title='Total Earnings' value='$12300' />
-            <StatCard title='Total User' value='520' />
-            <StatCard title='Total Subscriptions' value='1430' />
-          </div>
-        </div>
-      </section>
-
+    <main className='bg-[#000] w-full p-4 md:p-6'>
       <section>
-        <h2 className='mb-4 text-xl font-medium text-gray-800'>Transaction</h2>
         <TransactionTable />
       </section>
     </main>
@@ -39,17 +28,7 @@ export default function DashboardContent() {
 interface StatCardProps {
   title: string;
   value: string;
-}
-
-function StatCard({ title, value }: StatCardProps) {
-  return (
-    <Card className='overflow-hidden w-full md:max-w-[380px] h-[161px] flex items-center justify-center border border-gray-200'>
-      <CardContent className='flex flex-col items-center justify-center p-6'>
-        <h3 className='mb-2 text-[#6E7A8A]'>{title}</h3>
-        <p className='text-[32px] font-semibold text-primary'>{value}</p>
-      </CardContent>
-    </Card>
-  );
+  icon: string;
 }
 
 function TransactionTable() {
@@ -164,35 +143,55 @@ function TransactionTable() {
 
   return (
     <>
-      <div className='overflow-hidden rounded-md border border-gray-200'>
+      <div className='overflow-hidden bg-[#333333] rounded-md'>
+        <h2 className='text-[32px] font-medium text-[#E6E6E6] p-6'>
+          User List
+        </h2>
         <div className='overflow-x-auto'>
           <Table>
-            <TableHeader className='bg-[#760C2A] text-white'>
-              <TableRow>
-                <TableHead className='text-white'>#Tr.ID</TableHead>
-                <TableHead className='text-white'>User Name</TableHead>
-                <TableHead className='text-white'>Subscription</TableHead>
-                <TableHead className='text-white'>Join Date</TableHead>
-                <TableHead className='text-center text-white'>Action</TableHead>
+            <TableHeader className='bg-[#5CE1E6] hover:!bg-[#5ce1e6d5] text-[#275F61] py-8'>
+              <TableRow className='py-8'>
+                <TableHead className='text-[#275F61] text-lg text-center'>
+                  #Tr.ID
+                </TableHead>
+                <TableHead className='text-[#275F61] text-lg text-center'>
+                  User Name
+                </TableHead>
+                <TableHead className='text-[#275F61] text-lg text-center'>
+                  Subscription
+                </TableHead>
+                <TableHead className='text-[#275F61] text-lg text-center'>
+                  Join Date
+                </TableHead>
+                <TableHead className='text-[#275F61] text-lg text-center'>
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {currentTransactions.map((transaction) => (
                 <TableRow key={transaction.id}>
-                  <TableCell className='font-medium'>
+                  <TableCell className='font-medium text-lg text-[#B0B0B0] text-center'>
                     {transaction.id}
                   </TableCell>
-                  <TableCell>{transaction.name}</TableCell>
-                  <TableCell>{transaction.subscription}</TableCell>
-                  <TableCell>{transaction.date}</TableCell>
-                  <TableCell className='text-center'>
+                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                    {transaction.name}
+                  </TableCell>
+                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                    {transaction.subscription}
+                  </TableCell>
+                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                    {transaction.date}
+                  </TableCell>
+                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
                     <Button
                       variant='ghost'
                       size='sm'
                       className='h-8 w-8 p-0'
                       onClick={() => openUserModal(transaction)}
                     >
-                      <Info className='h-4 w-4' />
+                      <Info className='h-6 w-6' />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -201,7 +200,7 @@ function TransactionTable() {
           </Table>
         </div>
 
-        <div className='flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3'>
+        <div className='flex items-center justify-between border-t border-gray-200 bg-[#333333] px-4 py-3 mp-6'>
           <div className='flex items-center gap-2'>
             <Button
               variant='outline'
@@ -225,7 +224,7 @@ function TransactionTable() {
                 />
               </svg>
             </Button>
-            <span className='text-sm'>Previous</span>
+            <span className='text-sm text-[#E6E6E6]'>Previous</span>
           </div>
 
           <div className='flex items-center gap-1'>
@@ -236,7 +235,7 @@ function TransactionTable() {
                   variant={page === currentPage ? "default" : "outline"}
                   size='sm'
                   className={`h-8 w-8 p-0 ${
-                    page === currentPage ? "bg-[#760C2A] text-white" : ""
+                    page === currentPage ? "bg-teal-800 text-white" : ""
                   }`}
                   onClick={() => handlePageChange(page)}
                 >
@@ -247,7 +246,7 @@ function TransactionTable() {
           </div>
 
           <div className='flex items-center gap-2'>
-            <span className='text-sm'>Next</span>
+            <span className='text-sm text-[#E6E6E6]'>Next</span>
             <Button
               variant='outline'
               size='sm'
