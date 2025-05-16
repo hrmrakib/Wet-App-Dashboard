@@ -151,7 +151,7 @@ export default function DashboardSidebar() {
           <SidebarFooter className='p-6'>
             <button
               onClick={() => setIsLogoutModalOpen(true)}
-              className='flex w-full items-center gap-3 bg-[#760C2A] px-4 py-3 text-white hover:bg-[#760c2ae0]'
+              className='flex w-full items-center gap-3  px-4 py-3'
             >
               <svg
                 width='25'
@@ -161,15 +161,31 @@ export default function DashboardSidebar() {
                 xmlns='http://www.w3.org/2000/svg'
               >
                 <path
-                  d='M17.5 16L21.5 12M21.5 12L17.5 8M21.5 12L7.5 12M13.5 16V17C13.5 18.6569 12.1569 20 10.5 20H6.5C4.84315 20 3.5 18.6569 3.5 17V7C3.5 5.34315 4.84315 4 6.5 4H10.5C12.1569 4 13.5 5.34315 13.5 7V8'
-                  stroke='#FAFAFA'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
+                  d='M9.40039 7.56023C9.71039 3.96023 11.5604 2.49023 15.6104 2.49023H15.7404C20.2104 2.49023 22.0004 4.28023 22.0004 8.75023V15.2702C22.0004 19.7402 20.2104 21.5302 15.7404 21.5302H15.6104C11.5904 21.5302 9.74039 20.0802 9.41039 16.5402'
+                  stroke='#5CE1E6'
+                  stroke-width='1.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                />
+                <path
+                  d='M15.5001 12H4.12012'
+                  stroke='#5CE1E6'
+                  stroke-width='1.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                />
+                <path
+                  d='M6.35 8.65039L3 12.0004L6.35 15.3504'
+                  stroke='#5CE1E6'
+                  stroke-width='1.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
                 />
               </svg>
 
-              <span>Log out</span>
+              <span className='text-[#5CE1E6] text-lg font-semibold'>
+                Log out
+              </span>
             </button>
           </SidebarFooter>
         </Sidebar>
@@ -200,15 +216,11 @@ function NavItem({ href, icon: Icon, label, active }: NavItemProps) {
             "flex items-center gap-3 px-4 !py-4 transition-colors rounded-full",
             active
               ? "bg-[#5CE1E6] text-[#333]"
-              : "text-[#B0B0B0] hover:bg-gray-100"
+              : "text-[#B0B0B0] hover:bg-[#5CE1E6] hover:text-[#333]"
           )}
         >
           <Icon size={18} />
-          <span
-            className={`text-lg text-[#B0B0B0] ${
-              active ? "text-[#275F61]" : ""
-            }`}
-          >
+          <span className={`text-lg ${active ? "text-[#333]" : ""}`}>
             {label}
           </span>
         </Link>

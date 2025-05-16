@@ -9,16 +9,7 @@ import { ArrowLeft, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard-sidebar";
-import DashboardHeader from "@/components/dashboard-header";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -68,14 +59,14 @@ export default function PersonalInformationEditPage() {
   };
 
   return (
-    <div className='flex bg-gray-50'>
+    <div className='flex'>
       <div className='flex-1 w-full'>
         <main className='w-full p-4 md:p-6'>
-          <div className='max-w-3xl mx-auto'>
-            <div className='mb-6'>
+          <div className=''>
+            <div className='mb-6 bg-[#333333] px-6 py-3 rounded-xl'>
               <Link
                 href='/setting/personal-information'
-                className='inline-flex items-center text-primary hover:text-teal-700'
+                className='inline-flex items-center text-[#E6E6E6] hover:text-[#5CE1E6]'
               >
                 <ArrowLeft className='mr-2 h-6 w-6' />
                 <span className='text-2xl font-semibold'>
@@ -87,7 +78,7 @@ export default function PersonalInformationEditPage() {
             <form onSubmit={handleSubmit} className='space-y-6'>
               <div className='flex flex-col md:flex-row gap-8'>
                 {/* Profile Image Section */}
-                <div className='w-full md:w-64 flex flex-col items-center border border-gray-200 rounded-md p-6 bg-white'>
+                <div className='w-full md:w-64 flex flex-col items-center rounded-md p-6 bg-[#333333]'>
                   <div
                     className='relative mb-4 cursor-pointer'
                     onClick={handleImageClick}
@@ -111,34 +102,70 @@ export default function PersonalInformationEditPage() {
                       onChange={handleImageChange}
                     />
                   </div>
-                  <span className='text-sm text-gray-600'>Profile</span>
-                  <span className='font-medium text-gray-800'>Admin</span>
+                  <span className='text-base text-gray-300'>Profile</span>
+                  <span className='font-medium text-xl text-gray-100'>
+                    Admin
+                  </span>
                 </div>
 
                 {/* Form Fields Section */}
                 <div className='flex-1 space-y-4'>
-                  <div className='space-y-2'>
-                    <Label
-                      htmlFor='name'
-                      className='text-lg font-medium text-primary'
-                    >
-                      Name
+                  <div className='relative h-12 bg-[#333333] rounded-3xl'>
+                    <Label className='absolute top-1/2 -translate-y-1/2 left-4 text-lg font-medium text-primary'>
+                      <svg
+                        width='16'
+                        height='16'
+                        viewBox='0 0 16 16'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M8.00033 8.00065C9.84127 8.00065 11.3337 6.50827 11.3337 4.66732C11.3337 2.82637 9.84127 1.33398 8.00033 1.33398C6.15938 1.33398 4.66699 2.82637 4.66699 4.66732C4.66699 6.50827 6.15938 8.00065 8.00033 8.00065Z'
+                          stroke='#B0B0B0'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                        <path
+                          d='M13.7268 14.6667C13.7268 12.0867 11.1601 10 8.0001 10C4.8401 10 2.27344 12.0867 2.27344 14.6667'
+                          stroke='#B0B0B0'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
                     </Label>
                     <Input
                       id='name'
                       name='name'
                       value={formData.name}
                       onChange={handleChange}
-                      className='w-full text-lg text-primary'
+                      className='w-full h-12 text-lg text-white bg-transparent pl-12'
                     />
                   </div>
 
-                  <div className='space-y-2'>
-                    <Label
-                      htmlFor='email'
-                      className='text-lg font-medium text-primary'
-                    >
-                      Email
+                  <div className='relative h-12 bg-[#333333] rounded-3xl'>
+                    <Label className='absolute top-1/2 -translate-y-1/2 left-4 text-lg font-medium text-primary'>
+                      <svg
+                        width='20'
+                        height='20'
+                        viewBox='0 0 16 16'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
+                          stroke='#B0B0B0'
+                          stroke-miterlimit='10'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                        <path
+                          d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
+                          stroke='#B0B0B0'
+                          stroke-miterlimit='10'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
                     </Label>
                     <Input
                       id='email'
@@ -146,41 +173,65 @@ export default function PersonalInformationEditPage() {
                       type='email'
                       value={formData.email}
                       onChange={handleChange}
-                      className='w-full text-lg text-primary'
+                      className='w-full h-12 text-lg text-white bg-transparent pl-12'
                     />
                   </div>
 
-                  <div className='space-y-2'>
-                    <Label
-                      htmlFor='phone'
-                      className='text-lg font-medium text-primary'
-                    >
-                      Phone Number
+                  <div className='relative h-12 bg-[#333333] rounded-3xl'>
+                    <Label className='absolute top-1/2 -translate-y-1/2 left-4 text-lg font-medium text-primary'>
+                      <svg
+                        width='20'
+                        height='20'
+                        viewBox='0 0 16 16'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
+                          stroke='#B0B0B0'
+                          stroke-miterlimit='10'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                        <path
+                          d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
+                          stroke='#B0B0B0'
+                          stroke-miterlimit='10'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
                     </Label>
-                    <div className='w-full'>
+
+                    <div className='w-full relative h-[50px] bg-[#333333] rounded-3xl px-2'>
                       <PhoneInput
                         country={"us"}
                         value={phone}
                         onChange={(phone) => setPhone(phone)}
                         containerClass='w-full' // Ensures the entire component takes full width
-                        inputClass='w-full h-[100px] p-2 border border-[#760C2A] rounded-md text-5xl font-semibold text-[#760C2A]' // Ensures input field spans full width
+                        inputClass='w-full h-[10px] !bg-[#333333] rounded-3xl text-5xl font-semibold text-[#B0B0B0]' // Ensures input field spans full width
                         buttonClass='border-[#760C2A]' // Optional: styles for the country dropdown button
                         inputStyle={{
                           width: "100%",
-                          height: "40px",
-                          border: "1px solid #760C2A",
-                        }} // Inline style fallback if inputClass fails
+                          height: "50px",
+                          border: "none",
+                          borderRadius: "50px",
+                          backgroundColor: "#333333",
+                        }}
                         placeholder='Enter phone number'
                       />
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <div className='flex justify-end'>
-                <Button type='submit' className='bg-teal-800 hover:bg-teal-700'>
-                  Save Changes
-                </Button>
+                  <div className='flex justify-end'>
+                    <Button
+                      type='submit'
+                      className='bg-[#5CE1E6] hover:bg-[#5CE1E6] text-[#000000]'
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
               </div>
             </form>
           </div>

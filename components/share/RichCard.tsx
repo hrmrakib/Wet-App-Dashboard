@@ -12,13 +12,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface PoolCardProps {
   title: string;
   icon: string;
 }
 
-export default function IssueCard({ title, icon }: PoolCardProps) {
+export default function RichCard({ title, icon }: PoolCardProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
@@ -83,12 +84,12 @@ export default function IssueCard({ title, icon }: PoolCardProps) {
         </div>
       </div>
       <div className='mt-auto p-4 flex gap-2'>
-        <button
-          className='flex-1 bg-[#5CE1E6] hover:bg-[#4de5eb] text-[#275F61] rounded py-2 text-sm transition-colors'
-          onClick={() => alert(`Edit ${title}`)}
+        <Link
+          href='/issues/123'
+          className='flex-1 bg-[#5CE1E6] hover:bg-[#4de5eb] text-[#275F61] text-center rounded py-2 text-sm transition-colors'
         >
           Edit
-        </button>
+        </Link>
         <button
           className='flex-1 bg-transparent hover:bg-zinc-600 text-[#5CE1E6] border border-[#5CE1E6] rounded py-2 text-sm transition-colors'
           onClick={() => setShowDeleteDialog(true)}

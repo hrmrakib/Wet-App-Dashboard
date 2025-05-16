@@ -137,7 +137,7 @@ function TransactionTable() {
     <>
       <div className='overflow-hidden bg-[#333333] rounded-md'>
         <h2 className='text-[32px] font-medium text-[#E6E6E6] p-6'>
-          User List
+          Pool Problem
         </h2>
         <div className='overflow-x-auto'>
           <Table>

@@ -96,3 +96,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.react-tel-input .flag-dropdown {
+  background-color: #333333 !important;
+  border: none !important;
+ width: auto;
+ height: auto;
+ border-radius: 999;
+}

@@ -3,17 +3,17 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 const issues = [
-  { id: 1, title: "Start Of The Season", icon: "/issue/1.png" },
-  { id: 2, title: "Calculate Volume", icon: "/issue/2.png" },
-  { id: 3, title: "Flocculant Of Claefier", icon: "/issue/3.png" },
-  { id: 4, title: "Winterize My Pool", icon: "/issue/4.png" },
-  { id: 5, title: "How Much Chlorine", icon: "/issue/5.png" },
-  { id: 6, title: "How Many Filter", icon: "/issue/6.png" },
-  { id: 7, title: "Which Robot", icon: "/issue/7.png" },
-  { id: 8, title: "Summer Blanket", icon: "/issue/8.png" },
+  { id: 1, title: "FQL Method For Pool", icon: "/issue/1.png" },
+  { id: 2, title: "Chemical Parameters", icon: "/issue/2.png" },
+  { id: 3, title: "Wash The Filter", icon: "/issue/3.png" },
+  { id: 4, title: "How Many Filter", icon: "/issue/4.png" },
+  { id: 5, title: "Thr Green Pool", icon: "/issue/5.png" },
+  { id: 6, title: "Have Cloudy Pool", icon: "/issue/6.png" },
+  { id: 7, title: "Algae In Pool", icon: "/issue/7.png" },
+  { id: 8, title: "How Raise PH", icon: "/issue/8.png" },
 ];
 
-export default function IssuesFrequent() {
+export default function BuyProducts() {
   return (
     <div className='min-h-screen bg-black p-4 md:p-6'>
       <div className='w-full mx-auto'>
