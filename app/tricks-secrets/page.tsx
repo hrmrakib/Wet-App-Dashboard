@@ -3,11 +3,11 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 const issues = [
-  { id: 1, title: "FQL Method For Pool", icon: "/issue/1.png" },
-  { id: 2, title: "Chemical Parameters", icon: "/issue/2.png" },
-  { id: 3, title: "Wash The Filter", icon: "/issue/3.png" },
-  { id: 4, title: "How Many Filter", icon: "/issue/4.png" },
-  { id: 5, title: "Thr Green Pool", icon: "/issue/5.png" },
+  { id: 1, title: "Reduce electricity costs", icon: "/issue/1.png" },
+  { id: 2, title: "Optimize chlorinator", icon: "/issue/2.png" },
+  { id: 3, title: "Get clearer water", icon: "/issue/3.png" },
+  { id: 4, title: "Filter wirelessly costs", icon: "/issue/4.png" },
+  { id: 5, title: "efficient start season", icon: "/issue/5.png" },
 ];
 
 export default function TricksAndSecrets() {
