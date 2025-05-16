@@ -2,163 +2,212 @@
 
 import type React from "react";
 
-import { useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Plus, CircleMinus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Upload, X } from "lucide-react";
+import Image from "next/image";
 
-export default function AddSubscriptionPage() {
-  const [packageName, setPackageName] = useState("Basic");
-  const [packageAmount, setPackageAmount] = useState("Basic");
-  const [packageExpiration, setPackageExpiration] = useState("1 month");
+export default function AddSubscription() {
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [packageName, setPackageName] = useState("");
+  const [packageAmount, setPackageAmount] = useState("");
+  const [packageDuration, setPackageDuration] = useState("");
+  const [features, setFeatures] = useState<string[]>([]);
+  const [newFeature, setNewFeature] = useState("");
+  const [showFeaturesInput, setShowFeaturesInput] = useState(false);
 
-  const [features, setFeatures] = useState([
-    { name: "Add Media To Your Profile", value: "Add Media To Your Profile" },
-    { name: "Send Private Messages", value: "Send Private Messages" },
-    { name: "View Members Profile", value: "View Members Profile" },
-    { name: "View Members Directory", value: "View Members Directory" },
-  ]);
-
-  const addFeatureField = () => {
-    setFeatures([...features, { name: "", value: "" }]);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const removeFeatureField = (index: number) => {
-    const updatedFeatures = [...features];
-    updatedFeatures.splice(index, 1);
-    setFeatures(updatedFeatures);
+  const handleAddFeature = () => {
+    if (newFeature.trim()) {
+      setFeatures([...features, newFeature.trim()]);
+      setNewFeature("");
+    }
   };
 
-  const updateFeatureValue = (index: number, value: string) => {
-    const updatedFeatures = [...features];
-    updatedFeatures[index].value = value;
-    setFeatures(updatedFeatures);
+  const handleRemoveFeature = (index: number) => {
+    setFeatures(features.filter((_, i) => i !== index));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
+
+    // Validate form
+    if (!packageName || !packageAmount || !packageDuration) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    // In a real app, you would save this data to a database
     console.log({
+      image,
       packageName,
       packageAmount,
-      packageExpiration,
+      packageDuration,
       features,
     });
+
+    // Navigate back to the subscriptions page
+    router.push("/");
   };
 
   return (
-    <div className='flex min-h-screen bg-gray-50'>
-      <div className='flex-1 w-full'>
-        <main className='w-full p-4 md:p-6'>
-          <div className='max-w-3xl mx-auto'>
-            <div className='mb-6'>
-              <Link
-                href='/subscription'
-                className='inline-flex items-center text-primary hover:text-[#760c2ace]'
+    <div className='min-h-screen bg-black p-4'>
+      <div className='max-w-5xl mx-auto'>
+        <div className='bg-zinc-800 rounded-lg overflow-hidden'>
+          <div className='p-4 flex items-center'>
+            <button
+              onClick={() => router.back()}
+              className='text-white hover:text-gray-300 mr-3'
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <h1 className='text-white text-xl'>Add Subscription</h1>
+          </div>
+
+          <form onSubmit={handleSubmit} className='p-4 space-y-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div
+                className='bg-zinc-700 rounded-md p-3 flex items-center justify-between cursor-pointer'
+                onClick={() => fileInputRef.current?.click()}
               >
-                <ArrowLeft className='mr-2 h-4 w-4' />
-                <span className='text-xl font-semibold'>Add Subscription</span>
-              </Link>
+                <span className='text-gray-300'>Upload Image</span>
+                <Upload size={20} className='text-gray-300' />
+                <input
+                  ref={fileInputRef}
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleImageUpload}
+                />
+              </div>
+
+              <input
+                type='text'
+                placeholder='Package Name'
+                value={packageName}
+                onChange={(e) => setPackageName(e.target.value)}
+                className='bg-zinc-700 rounded-md p-3 text-white placeholder-gray-300 outline-none'
+              />
             </div>
 
-            <form onSubmit={handleSubmit} className='space-y-6'>
-              <div className='space-y-2'>
-                <label
-                  htmlFor='package-name'
-                  className='block text-sm font-medium text-gray-700'
-                >
-                  Package Name
-                </label>
-                <Input
-                  id='package-name'
-                  value={packageName}
-                  onChange={(e) => setPackageName(e.target.value)}
-                  className='w-full'
-                />
-              </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <input
+                type='text'
+                placeholder='Package Amount'
+                value={packageAmount}
+                onChange={(e) => setPackageAmount(e.target.value)}
+                className='bg-zinc-700 rounded-md p-3 text-white placeholder-gray-300 outline-none'
+              />
 
-              <div className='space-y-2'>
-                <label
-                  htmlFor='package-amount'
-                  className='block text-sm font-medium text-gray-700'
-                >
-                  Package Amount
-                </label>
-                <Input
-                  id='package-amount'
-                  value={packageAmount}
-                  onChange={(e) => setPackageAmount(e.target.value)}
-                  className='w-full'
-                />
-              </div>
+              <input
+                type='text'
+                placeholder='Package Duration'
+                value={packageDuration}
+                onChange={(e) => setPackageDuration(e.target.value)}
+                className='bg-zinc-700 rounded-md p-3 text-white placeholder-gray-300 outline-none'
+              />
+            </div>
 
-              <div className='space-y-2'>
-                <label
-                  htmlFor='package-expiration'
-                  className='block text-sm font-medium text-gray-700'
-                >
-                  Package Expiration
-                </label>
-                <Input
-                  id='package-expiration'
-                  value={packageExpiration}
-                  onChange={(e) => setPackageExpiration(e.target.value)}
-                  className='w-full'
+            {/* Image Preview */}
+            {image && (
+              <div className='relative w-24 h-24 mx-auto'>
+                <Image
+                  src={image || "/placeholder.svg"}
+                  alt='Package'
+                  fill
+                  className='object-cover rounded-md'
                 />
+                <button
+                  type='button'
+                  onClick={() => setImage(null)}
+                  className='absolute -top-2 -right-2 bg-red-500 rounded-full p-1'
+                >
+                  <X size={14} className='text-white' />
+                </button>
               </div>
+            )}
 
+            {/* Features Section */}
+            {showFeaturesInput ? (
               <div className='space-y-2'>
-                <label className='block text-sm font-medium text-gray-700'>
-                  Package Features
-                </label>
-                <div className='space-y-3'>
-                  {features.map((feature, index) => (
-                    <div
-                      key={index}
-                      className='flex items-center justify-between border border-gray-200 rounded-md'
-                    >
-                      <Input
-                        value={feature.value}
-                        onChange={(e) =>
-                          updateFeatureValue(index, e.target.value)
-                        }
-                        className='border-0 focus-visible:ring-0 focus-visible:ring-offset-0'
-                        placeholder='Enter feature'
-                      />
-                      <button
-                        type='button'
-                        onClick={() =>
-                          index === features.length - 1
-                            ? addFeatureField()
-                            : removeFeatureField(index)
-                        }
-                        className='flex-shrink-0 p-3 focus:outline-none'
-                      >
-                        {index === features.length - 1 ? (
-                          <div className='text-green-600'>
-                            <Plus className='h-6 w-6 rounded-full border-2 border-current' />
-                          </div>
-                        ) : (
-                          <div className='text-amber-400'>
-                            <CircleMinus className='h-6 w-6' />
-                          </div>
-                        )}
-                      </button>
-                    </div>
-                  ))}
+                <div className='flex gap-2'>
+                  <input
+                    type='text'
+                    placeholder='Enter feature'
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    className='bg-zinc-700 rounded-md p-3 text-white placeholder-gray-300 outline-none flex-1'
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddFeature();
+                      }
+                    }}
+                  />
+                  <button
+                    type='button'
+                    onClick={handleAddFeature}
+                    className='bg-cyan-400 text-zinc-800 rounded-md px-4'
+                  >
+                    Add
+                  </button>
                 </div>
-              </div>
 
-              <Button
-                type='submit'
-                className='w-full bg-[#760C2A] hover:bg-[#760c2ad5] text-lg text-white py-2.5 rounded-md'
+                {features.length > 0 && (
+                  <div className='bg-zinc-700 rounded-md p-3'>
+                    <h3 className='text-white mb-2'>Features:</h3>
+                    <ul className='space-y-2'>
+                      {features.map((feature, index) => (
+                        <li
+                          key={index}
+                          className='flex justify-between items-center text-white'
+                        >
+                          <span>• {feature}</span>
+                          <button
+                            type='button'
+                            onClick={() => handleRemoveFeature(index)}
+                            className='text-red-400 hover:text-red-300'
+                          >
+                            <X size={16} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                type='button'
+                onClick={() => setShowFeaturesInput(true)}
+                className='bg-zinc-700 rounded-md p-3 text-gray-300 w-full text-left flex items-center'
               >
-                Add Subscription
-              </Button>
-            </form>
-          </div>
-        </main>
+                <span>Add Features</span>
+              </button>
+            )}
+
+            <div className='flex justify-center pt-4'>
+              <button
+                type='submit'
+                className='bg-cyan-400 hover:bg-cyan-500 text-zinc-800 font-medium rounded-full px-12 py-3 transition-colors'
+              >
+                Create
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
