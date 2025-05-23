@@ -96,3 +96,7 @@ body {
 .group[data-side="left"] .group-data-\[side\=left\]\:border-r {
   border-right-width: 0;
 }
+
+button {
+  @apply cursor-pointer;
+}

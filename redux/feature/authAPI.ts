@@ -18,7 +18,16 @@ const authAPI = baseApi.injectEndpoints({
         body,
       }),
     }),
+
+    verifyOtp: builder.mutation<any, any>({
+      query: (body) => ({
+        url: "/api-auth/verify_email/",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useSendOtpMutation } = authAPI;
+export const { useLoginMutation, useSendOtpMutation, useVerifyOtpMutation } =
+  authAPI;

@@ -3,15 +3,17 @@
 import type React from "react";
 
 import { useState, type FormEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSendOtpMutation } from "@/redux/feature/authAPI";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const router = useRouter();
 
   const [sendOtp] = useSendOtpMutation();
 
@@ -33,11 +35,14 @@ export default function ForgetPassword() {
     try {
       const response = await sendOtp({ email }).unwrap();
 
+      if (response.status === "success") {
+        localStorage.setItem("email", email);
+        toast.success("OTP sent successfully!");
+        setSubmitSuccess(true);
+        router.push("/verify-otp");
+      }
+
       console.log(response);
-
-      // setSubmitSuccess(true);
-
-      // In a real app, you would redirect to dashboard or home page after successful login
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrors({ submit: "Invalid credentials. Please try again." });
