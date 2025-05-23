@@ -6,10 +6,12 @@ import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { useLoginMutation } from "@/redux/feature/authAPI";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    email: "",
     password: "",
     remember: false,
   });
@@ -18,11 +20,15 @@ export default function SignInPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const router = useRouter();
+
+  const [login] = useLoginMutation();
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "email is required";
     }
 
     if (!formData.password) {
@@ -60,11 +66,20 @@ export default function SignInPage() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await login({
+        email: formData.email,
+        password: formData.password,
+      });
 
-      console.log("Form submitted with data:", formData);
-      setSubmitSuccess(true);
+      console.log(res?.data);
+      if (res?.data?.status === "success") {
+        localStorage.setItem("access_token", res?.data?.access_token);
+
+        setSubmitSuccess(true);
+        router.push("/");
+      }
+
+      // setSubmitSuccess(true);
 
       // In a real app, you would redirect to dashboard or home page after successful login
     } catch (error) {
@@ -80,10 +95,13 @@ export default function SignInPage() {
   };
 
   return (
-    <main className='w-full min-h-screen flex flex-col md:flex-row items-center justify-center p-4 md:p-8'>
-      <div className='container mx-auto flex flex-col md:flex-row items-center'>
+    <main className='w-full min-h-screen bg-[url(/auth-bg.png)] flex flex-col md:flex-row items-center justify-center p-4 md:p-8'>
+      <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50'></div>
+      {/* Overlay for better text visibility */}
+
+      <div className='container mx-auto flex flex-col md:flex-row items-center z-50'>
         {/* Logo Section */}
-        <div className='hidden w-full md:w-1/2 md:flex items-center justify-center p-8'>
+        {/* <div className='hidden w-full md:w-1/2 md:flex items-center justify-center p-8'>
           <Link href='/' className='max-w-xs'>
             <Image
               src='/logo.svg'
@@ -93,10 +111,10 @@ export default function SignInPage() {
               className='mb-2'
             />
           </Link>
-        </div>
+        </div> */}
 
         {/* Form Section */}
-        <div className='w-full md:w-1/2 max-w-md'>
+        <div className='w-full md:w-1/2 max-w-lg mx-auto bg-[#000000] px-6 py-16 rounded-xl'>
           <div className='text-center mb-6'>
             <h1 className='text-[32px] font-bold text-primary mb-2'>
               Sign In Now
@@ -111,38 +129,65 @@ export default function SignInPage() {
               Sign in successful! Redirecting to your dashboard...
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className='space-y-4'>
-              <div>
+            <form onSubmit={handleSubmit} className='space-y-6'>
+              <div className='relative mb-4'>
                 <label
-                  htmlFor='name'
-                  className='block text-primary text-lg font-medium mb-1'
+                  htmlFor='email'
+                  className='absolute left-3 top-1/2 transform -translate-y-1/2 text-[#B0B0B0] text-lg font-medium'
                 >
-                  Name
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M3 8L10.8906 13.2604C11.5624 13.7083 12.4376 13.7083 13.1094 13.2604L21 8M5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19Z'
+                      stroke='#B0B0B0'
+                      stroke-width='2'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                    />
+                  </svg>
                 </label>
                 <input
-                  type='text'
-                  id='name'
-                  name='name'
-                  placeholder='Full name...'
-                  value={formData.name}
+                  type='email'
+                  id='email'
+                  name='email'
+                  placeholder='Enter your email...'
+                  value={formData.email}
                   onChange={handleChange}
-                  className={`w-full p-3 border placeholder:text-primary ${
-                    errors.name ? "border-red-500" : "border-slate-300"
-                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`bg-[#333333] text-[#B0B0B0] pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
+                    errors.email ? "border-red-500" : "border-slate-300"
+                  } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
                 />
-                {errors.name && (
-                  <p className='text-red-500 text-sm mt-1'>{errors.name}</p>
-                )}
               </div>
 
-              <div>
+              <div className='relative mb-4'>
                 <label
-                  htmlFor='password'
-                  className='block text-primary text-lg font-medium mb-1'
+                  htmlFor='email'
+                  className='absolute left-3 top-1/2 transform -translate-y-1/2 text-[#B0B0B0] text-lg font-medium'
                 >
-                  Password
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M15 7C16.1046 7 17 7.89543 17 9M21 9C21 12.3137 18.3137 15 15 15C14.3938 15 13.8087 14.9101 13.2571 14.7429L11 17H9V19H7V21H4C3.44772 21 3 20.5523 3 20V17.4142C3 17.149 3.10536 16.8946 3.29289 16.7071L9.25707 10.7429C9.08989 10.1914 9 9.60617 9 9C9 5.68629 11.6863 3 15 3C18.3137 3 21 5.68629 21 9Z'
+                      stroke='#B0B0B0'
+                      stroke-width='2'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                    />
+                  </svg>
                 </label>
-                <div className='relative'>
+
+                <div>
                   <input
                     type={showPassword ? "text" : "password"}
                     id='password'
@@ -150,9 +195,10 @@ export default function SignInPage() {
                     placeholder='Enter your password...'
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full p-3 border placeholder:text-primary ${
+                    className={`bg-[#333333] text-[#B0B0B0] pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
                       errors.password ? "border-red-500" : "border-slate-300"
-                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    required
                   />
                   <button
                     type='button'
@@ -162,9 +208,6 @@ export default function SignInPage() {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
-                {errors.password && (
-                  <p className='text-red-500 text-sm mt-1'>{errors.password}</p>
-                )}
               </div>
 
               <div className='flex items-center justify-between'>
@@ -179,14 +222,14 @@ export default function SignInPage() {
                   />
                   <label
                     htmlFor='remember'
-                    className='ml-2 text-lg text-primary'
+                    className='ml-2 text-lg text-[#B0B0B0] font-medium'
                   >
                     Remember
                   </label>
                 </div>
                 <Link
                   href='/forget-password'
-                  className='text-lg font-medium text-[#F99F04] hover:underline'
+                  className='text-lg font-medium text-[#B0B0B0] hover:underline'
                 >
                   Forget Password?
                 </Link>
@@ -199,24 +242,24 @@ export default function SignInPage() {
               <button
                 type='submit'
                 disabled={isSubmitting}
-                className='w-full bg-[#F99F04] hover:bg-[#f99f04d2] text-[#FAFAFA] text-lg font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out'
+                className='w-full bg-[#5CE1E6] hover:bg-[#40d9df] text-[#275F61] text-lg font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out'
               >
                 {isSubmitting ? "Signing In..." : "Sign In Now"}
               </button>
             </form>
           )}
 
-          <div className='text-center mt-6'>
-            <p className='text-primary text-lg'>
+          {/* <div className='text-center mt-6'>
+            <p className='text-[#8A8A8A] text-lg'>
               Don&apos;t have an account?{" "}
               <Link
                 href='/create-account'
-                className='text-primary text-lg font-medium hover:underline'
+                className='text-[#E6E6E6] text-lg font-medium hover:underline'
               >
                 Sign Up Now
               </Link>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </main>

@@ -5,47 +5,21 @@ import type React from "react";
 import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSendOtpMutation } from "@/redux/feature/authAPI";
 
 export default function ForgetPassword() {
-  const [formData, setFormData] = useState({
-    name: "",
-    password: "",
-    remember: false,
-  });
+  const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
+  const [sendOtp] = useSendOtpMutation();
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -54,15 +28,14 @@ export default function ForgetPassword() {
     if (!validateForm()) {
       return;
     }
-
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await sendOtp({ email }).unwrap();
 
-      console.log("Form submitted with data:", formData);
-      setSubmitSuccess(true);
+      console.log(response);
+
+      // setSubmitSuccess(true);
 
       // In a real app, you would redirect to dashboard or home page after successful login
     } catch (error) {
@@ -74,29 +47,18 @@ export default function ForgetPassword() {
   };
 
   return (
-    <main className='w-full min-h-screen flex flex-col md:flex-row items-center justify-center p-4 md:p-8'>
-      <div className='container mx-auto flex flex-col md:flex-row items-center'>
-        {/* Logo Section */}
-        <div className='hidden w-full md:w-1/2 md:flex items-center justify-center p-8'>
-          <Link href='/' className='max-w-xs'>
-            <Image
-              src='/logo.svg'
-              alt='DesignDoc Logo'
-              width={300}
-              height={150}
-              className='mb-2'
-            />
-          </Link>
-        </div>
+    <main className='w-full min-h-screen bg-[url(/auth-bg.png)] flex flex-col md:flex-row items-center justify-center p-4 md:p-8'>
+      <div className='absolute top-0 left-0 w-full h-full bg-black opacity-50'></div>
 
+      <div className='container mx-auto flex flex-col md:flex-row items-center z-50'>
         {/* Form Section */}
-        <div className='w-full md:w-1/2 max-w-md'>
+        <div className='w-full md:w-1/2 max-w-lg mx-auto bg-[#000000] px-6 py-16 rounded-xl'>
           <div className='text-center mb-6'>
             <h1 className='text-[32px] font-bold text-primary mb-2'>
               Forget Your Password
             </h1>
             <p className='text-primary text-lg'>
-              Welcome back! Select method to log in
+              Enter your email address to reset your password.
             </p>
           </div>
 
@@ -106,27 +68,39 @@ export default function ForgetPassword() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className='space-y-4'>
-              <div>
+              <div className='relative mb-4'>
                 <label
                   htmlFor='email'
-                  className='block text-primary text-lg font-medium mb-1'
+                  className='absolute left-3 top-1/2 transform -translate-y-1/2 text-[#B0B0B0] text-lg font-medium'
                 >
-                  Email
+                  <svg
+                    width='24'
+                    height='24'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M3 8L10.8906 13.2604C11.5624 13.7083 12.4376 13.7083 13.1094 13.2604L21 8M5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19Z'
+                      stroke='#B0B0B0'
+                      stroke-width='2'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                    />
+                  </svg>
                 </label>
                 <input
                   type='email'
                   id='email'
                   name='email'
-                  placeholder='Enter your email'
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full p-3 border placeholder:text-primary ${
-                    errors.name ? "border-red-500" : "border-slate-300"
-                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  placeholder='Enter your email...'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`bg-[#333333] text-[#B0B0B0] pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
+                    errors.email ? "border-red-500" : "border-slate-300"
+                  } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  required
                 />
-                {errors.name && (
-                  <p className='text-red-500 text-sm mt-1'>{errors.name}</p>
-                )}
               </div>
 
               {errors.submit && (
@@ -136,7 +110,7 @@ export default function ForgetPassword() {
               <button
                 type='submit'
                 disabled={isSubmitting}
-                className='w-full bg-[#F99F04] hover:bg-[#f99f04d2] text-[#FAFAFA] text-lg font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out'
+                className='w-full bg-[#5CE1E6] hover:bg-[#4adfe4] text-[#275F61] text-lg font-medium py-3 px-4 rounded-full transition duration-200 ease-in-out'
               >
                 {isSubmitting ? "Reset Password ..." : "Reset Password"}
               </button>
