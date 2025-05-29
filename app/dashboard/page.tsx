@@ -179,7 +179,7 @@ function TransactionTable() {
     setIsModalOpen(true);
   };
 
-  const handlePageChange = (page: number) => { 
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

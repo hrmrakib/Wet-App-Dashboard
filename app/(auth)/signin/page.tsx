@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/redux/feature/authAPI";
 import { useRouter } from "next/navigation";
+import { saveTokens } from "@/service/authService";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -71,11 +72,12 @@ export default function SignInPage() {
         password: formData.password,
       });
 
-      console.log(res?.data);
+      console.log("signin", res);
+
       if (res?.data?.status === "success") {
         localStorage.setItem("access_token", res?.data?.access_token);
-
-        setSubmitSuccess(true);
+        await saveTokens(res?.data?.token);
+        // setSubmitSuccess(true);
         router.push("/");
       }
 
