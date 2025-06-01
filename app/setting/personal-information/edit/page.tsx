@@ -122,14 +122,14 @@ export default function PersonalInformationEditPage() {
                         <path
                           d='M8.00033 8.00065C9.84127 8.00065 11.3337 6.50827 11.3337 4.66732C11.3337 2.82637 9.84127 1.33398 8.00033 1.33398C6.15938 1.33398 4.66699 2.82637 4.66699 4.66732C4.66699 6.50827 6.15938 8.00065 8.00033 8.00065Z'
                           stroke='#B0B0B0'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                         <path
                           d='M13.7268 14.6667C13.7268 12.0867 11.1601 10 8.0001 10C4.8401 10 2.27344 12.0867 2.27344 14.6667'
                           stroke='#B0B0B0'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                       </svg>
                     </Label>
@@ -155,15 +155,15 @@ export default function PersonalInformationEditPage() {
                           d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
                           stroke='#B0B0B0'
                           stroke-miterlimit='10'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                         <path
                           d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
                           stroke='#B0B0B0'
                           stroke-miterlimit='10'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                       </svg>
                     </Label>
@@ -190,15 +190,15 @@ export default function PersonalInformationEditPage() {
                           d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
                           stroke='#B0B0B0'
                           stroke-miterlimit='10'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                         <path
                           d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
                           stroke='#B0B0B0'
                           stroke-miterlimit='10'
-                          stroke-linecap='round'
-                          stroke-linejoin='round'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
                         />
                       </svg>
                     </Label>

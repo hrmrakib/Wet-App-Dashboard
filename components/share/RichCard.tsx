@@ -76,8 +76,8 @@ export default function RichCard({ title, icon }: PoolCardProps) {
               <path
                 d='M4.00003 12.6666L12.6667 3.99997M12.6667 3.99997V12.32M12.6667 3.99997H4.3467'
                 stroke='#5CE1E6'
-                stroke-linecap='round'
-                stroke-linejoin='round'
+                strokeLinecap='round'
+                strokeLinejoin='round'
               />
             </svg>
           </a>

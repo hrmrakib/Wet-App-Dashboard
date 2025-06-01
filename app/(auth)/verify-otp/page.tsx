@@ -155,9 +155,9 @@ export default function VerifyOTP() {
               <path
                 d='M10 19L3 12M3 12L10 5M3 12L21 12'
                 stroke='#E6E6E6'
-                stroke-width='2'
-                stroke-linecap='round'
-                stroke-linejoin='round'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
               />
             </svg>
 

@@ -88,14 +88,24 @@ export default function DashboardSidebar() {
                 active={pathname === "/users" || pathname.startsWith("/users")}
               />
               <NavItem
+                href='/services'
+                icon={ShieldAlert}
+                label='Services'
+                active={
+                  pathname === "/services" || pathname.startsWith("/services")
+                }
+              />
+              
+              {/* <NavItem
                 href='/issues'
                 icon={ShieldAlert}
                 label='Issues Frequent'
                 active={
                   pathname === "/issues" || pathname.startsWith("/issues")
                 }
-              />
-              <NavItem
+              /> */}
+
+              {/* <NavItem
                 href='/maintenance'
                 icon={BookCheck}
                 label='Maintenance'
@@ -103,7 +113,8 @@ export default function DashboardSidebar() {
                   pathname === "/maintenance" ||
                   pathname.startsWith("/maintenance")
                 }
-              />
+              /> */}
+
               <NavItem
                 href='/buy-products'
                 icon={ShoppingCart}
@@ -131,7 +142,7 @@ export default function DashboardSidebar() {
                   pathname.startsWith("/pool-problem")
                 }
               />
-              <NavItem
+              {/* <NavItem
                 href='/subscription'
                 icon={Crown}
                 label='Subscription'
@@ -139,7 +150,7 @@ export default function DashboardSidebar() {
                   pathname === "/subscription" ||
                   pathname.startsWith("/subscription")
                 }
-              />
+              /> */}
               <NavItem
                 href='/setting'
                 icon={Settings}
@@ -166,23 +177,23 @@ export default function DashboardSidebar() {
                 <path
                   d='M9.40039 7.56023C9.71039 3.96023 11.5604 2.49023 15.6104 2.49023H15.7404C20.2104 2.49023 22.0004 4.28023 22.0004 8.75023V15.2702C22.0004 19.7402 20.2104 21.5302 15.7404 21.5302H15.6104C11.5904 21.5302 9.74039 20.0802 9.41039 16.5402'
                   stroke='#5CE1E6'
-                  stroke-width='1.5'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
                 <path
                   d='M15.5001 12H4.12012'
                   stroke='#5CE1E6'
-                  stroke-width='1.5'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
                 <path
                   d='M6.35 8.65039L3 12.0004L6.35 15.3504'
                   stroke='#5CE1E6'
-                  stroke-width='1.5'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
                 />
               </svg>
 

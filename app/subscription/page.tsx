@@ -101,23 +101,19 @@ export default function Home() {
               </div>
             </div>
 
-            <div className='p-4'>
-              <button
-                onClick={() => handleChoosePlan("basic")}
-                className={`w-full py-3 rounded-md text-center font-medium transition-colors ${
-                  currentPlan === "basic"
-                    ? "bg-[#5CE1E6] text-white cursor-default"
-                    : "bg-cyan-400 text-zinc-800 hover:bg-cyan-500"
+            <div className='p-4 w-full'>
+              <Link
+                href='/subscription/edit'
+                className={`w-full block py-3 rounded-md text-center font-medium transition-colors bg-[#5CE1E6] cursor-pointer  text-zinc-800 hover:bg-cyan-500
                 }`}
-                disabled={currentPlan === "basic"}
               >
-                {currentPlan === "basic" ? "Current Plan" : "Choose Plan"}
-              </button>
+                Edit Plan
+              </Link>
             </div>
           </div>
 
           {/* Premium Plan */}
-          <div className='max-w-[330px] bg-zinc-800 rounded-lg overflow-hidden'>
+          {/* <div className='max-w-[330px] bg-zinc-800 rounded-lg overflow-hidden'>
             <div className='px-6 py-8 flex items-start gap-3'>
               <div className='bg-cyan-400 p-2 rounded-md'>
                 <Crown className='h-5 w-5 text-zinc-800' />
@@ -153,19 +149,15 @@ export default function Home() {
             </div>
 
             <div className='p-4'>
-              <button
-                onClick={() => handleChoosePlan("premium")}
-                className={`w-full py-3 rounded-md text-center font-medium transition-colors ${
-                  currentPlan === "premium"
-                    ? "bg-cyan-700 text-white cursor-default"
-                    : "bg-cyan-400 text-zinc-800 hover:bg-cyan-500"
-                }`}
-                disabled={currentPlan === "premium"}
+              <Link
+                href='/subscription/4778564'
+                className={`w-full py-3 rounded-md text-center font-medium transition-colors
+                    bg-cyan-700 text-white cursor-default  hover:bg-cyan-500`}
               >
-                {currentPlan === "premium" ? "Current Plan" : "Choose Plan"}
-              </button>
+                Edit Plan
+              </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

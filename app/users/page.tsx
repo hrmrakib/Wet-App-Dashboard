@@ -1,6 +1,6 @@
 "use client";
 
-import { Info } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,6 +12,15 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
+import { useGetAllUsersQuery } from "@/redux/feature/userAPI";
+import DetailRow from "@/components/DetailRow";
+
+interface IUser {
+  id: number;
+  full_name: string;
+  email: string;
+  created_on: string;
+}
 
 export default function DashboardContent() {
   return (
@@ -28,6 +37,7 @@ function TransactionTable() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Configurable items per page
+  const { data: users, isLoading } = useGetAllUsersQuery({});
 
   const transactions = [
     {
@@ -133,6 +143,7 @@ function TransactionTable() {
     }
   };
 
+  console.log(users);
   return (
     <>
       <div className='overflow-hidden bg-[#333333] rounded-md'>
@@ -162,26 +173,26 @@ function TransactionTable() {
             </TableHeader>
 
             <TableBody>
-              {currentTransactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+              {users?.data?.map((user: IUser) => (
+                <TableRow key={user?.id}>
                   <TableCell className='font-medium text-lg text-[#B0B0B0] text-center'>
-                    {transaction.id}
+                    {user?.id}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {transaction.name}
+                    {user?.full_name}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {transaction.subscription}
+                    {user?.email}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {transaction.date}
+                    {user?.created_on.split("T")[0]}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
                     <Button
                       variant='ghost'
                       size='sm'
                       className='h-8 w-8 p-0'
-                      onClick={() => openUserModal(transaction)}
+                      onClick={() => openUserModal(user)}
                     >
                       <Info className='h-6 w-6' />
                     </Button>
@@ -266,11 +277,36 @@ function TransactionTable() {
       </div>
 
       {isModalOpen && selectedUser && (
-        <UserDetailsModal
-          user={selectedUser}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+          <div className='relative w-full max-w-md rounded-md bg-[#000000] px-6 py-6 shadow-lg'>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className='absolute right-4 top-4 text-gray-500 hover:text-gray-700'
+            >
+              <X className='h-5 w-5' />
+              <span className='sr-only'>Close</span>
+            </button>
+
+            <h2 className='mb-6 py-5 text-center text-[30px] font-semibold text-[#E6E6E6]'>
+              User Details
+            </h2>
+
+            <div className='space-y-6'>
+              <DetailRow label='User ID:' value={"userId"} />
+              <DetailRow label='Date' value={"formattedDate"} />
+              <DetailRow label='User Name' value={"name"} />
+              <DetailRow label='Transaction Amount' value={"amount"} />
+              <DetailRow
+                label='Subscription Purchased'
+                value={"subscription"}
+              />
+            </div>
+
+            <Button className='mt-6 w-full bg-[#5CE1E6] hover:bg-[#5ce1e6b7]'>
+              Okay
+            </Button>
+          </div>
+        </div>
       )}
     </>
   );
