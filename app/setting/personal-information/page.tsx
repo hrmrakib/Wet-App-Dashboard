@@ -3,18 +3,33 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard-sidebar";
-import DashboardHeader from "@/components/dashboard-header";
+import { useGetProfileQuery } from "@/redux/feature/settingAPI";
+import { useEffect, useState } from "react";
 
 export default function PersonalInformationPage() {
-  const userData = {
-    name: "Sharon",
-    email: "alkhahiaksk@hmail.com",
-    phone: "+88017999855325",
-    profileImage: "/admin.jpg",
-  };
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    profileImage: "",
+  });
+
+  const { data: userProfile } = useGetProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    if (userProfile) {
+      setUser({
+        name: userProfile?.full_name,
+        email: userProfile?.email,
+        phone: userProfile?.phone,
+        profileImage: userProfile?.profile_pic,
+      });
+    }
+  }, [userProfile]);
+
+  console.log(userProfile);
 
   return (
     <div className='flex min-h-screen bg-[#000000]'>
@@ -39,7 +54,10 @@ export default function PersonalInformationPage() {
                 <div className='bg-[#333333] w-full md:w-64 flex flex-col items-center p-6 rounded-2xl'>
                   <div className='w-32 h-32 rounded-full overflow-hidden relative mb-3'>
                     <Image
-                      src={userData.profileImage || "/admin.jpg"}
+                      src={
+                        `${process.env.NEXT_PUBLIC_API_URL}${user?.profileImage}` ||
+                        "/admin.jpg"
+                      }
                       alt='Profile'
                       fill
                       className='object-cover'
@@ -53,32 +71,30 @@ export default function PersonalInformationPage() {
 
                 {/* User Information Section */}
                 <div className='flex-1 space-y-4'>
-                  <div className='bg-[#333333] grid grid-cols-1 md:grid-cols-3 gap-4 py-3 px-6 rounded-xl'>
+                  <div className='bg-[#333333] flex gap-4 py-3 px-6 rounded-xl'>
                     <div className='text-lg font-medium text-[#E6E6E6]'>
-                      Name
+                      Name:
                     </div>
-                    <div className='md:col-span-2 text-lg  text-[#E6E6E6]'>
-                      {userData.name}
+                    <div className='text-lg  text-[#E6E6E6]'>{user?.name}</div>
+                  </div>
+
+                  <div className='bg-[#333333] flex gap-4 py-3 px-6 rounded-xl'>
+                    <div className='text-lg font-medium text-[#E6E6E6]'>
+                      Email:
+                    </div>
+                    <div className='md:col-span-2 text-lg text-[#E6E6E6]'>
+                      {user?.email}
                     </div>
                   </div>
 
-                  <div className='bg-[#333333] grid grid-cols-1 md:grid-cols-3 gap-4 py-3 px-6 rounded-xl'>
+                  {/* <div className='bg-[#333333] grid grid-cols-1 md:grid-cols-3 gap-4 py-3 px-6 rounded-xl'>
                     <div className='text-lg font-medium text-[#E6E6E6]'>
-                      Email
+                      Phone Number:
                     </div>
                     <div className='md:col-span-2 text-lg text-[#E6E6E6]'>
-                      {userData.email}
+                      {user?.phone}
                     </div>
-                  </div>
-
-                  <div className='bg-[#333333] grid grid-cols-1 md:grid-cols-3 gap-4 py-3 px-6 rounded-xl'>
-                    <div className='text-lg font-medium text-[#E6E6E6]'>
-                      Phone Number
-                    </div>
-                    <div className='md:col-span-2 text-lg text-[#E6E6E6]'>
-                      {userData.phone}
-                    </div>
-                  </div>
+                  </div> */}
 
                   <div className='justify-self-end'>
                     <Link

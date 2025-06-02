@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Camera } from "lucide-react";
@@ -10,20 +10,37 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/redux/feature/settingAPI";
 
 export default function PersonalInformationEditPage() {
   const [formData, setFormData] = useState({
-    name: "Sharon",
-    email: "alkhahiaksaikgkgaik@hmail.com",
-    phone: "alkhahiaksaikgkgaik@hmail.com",
-    countryCode: "+1242",
+    name: "",
+    email: "",
+    phone: "",
+    profileImage: "",
   });
 
   const [profileImage, setProfileImage] = useState<string>("/admin.jpg");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [phone, setPhone] = useState("");
+
+  const { data: userProfile } = useGetProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [updateProfile] = useUpdateProfileMutation();
+
+  useEffect(() => {
+    if (userProfile) {
+      setFormData({
+        name: userProfile?.full_name,
+        email: userProfile?.email,
+        phone: userProfile?.phone,
+        profileImage: userProfile?.profile_pic,
+      });
+    }
+  }, [userProfile]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,10 +68,16 @@ export default function PersonalInformationEditPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const res = await updateProfile({
+      full_name: formData.name,
+      email: formData.email,
+      profile_pic: profileImage,
+    });
     // Handle form submission
-    console.log("Updated personal information:", { ...formData, profileImage });
+    console.log(".........:", res);
     // Show success message or handle errors
   };
 
@@ -85,7 +108,10 @@ export default function PersonalInformationEditPage() {
                   >
                     <div className='w-32 h-32 rounded-full overflow-hidden relative'>
                       <Image
-                        src={profileImage || "/admin.jpg"}
+                        src={
+                          `${process.env.NEXT_PUBLIC_API_URL}${formData?.profileImage}` ||
+                          "/admin.jpg"
+                        }
                         alt='Profile'
                         fill
                         className='object-cover'
@@ -175,52 +201,6 @@ export default function PersonalInformationEditPage() {
                       onChange={handleChange}
                       className='w-full h-12 text-lg text-white bg-transparent pl-12'
                     />
-                  </div>
-
-                  <div className='relative h-12 bg-[#333333] rounded-3xl'>
-                    <Label className='absolute top-1/2 -translate-y-1/2 left-4 text-lg font-medium text-primary'>
-                      <svg
-                        width='20'
-                        height='20'
-                        viewBox='0 0 16 16'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                      >
-                        <path
-                          d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
-                          stroke='#B0B0B0'
-                          stroke-miterlimit='10'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
-                          stroke='#B0B0B0'
-                          stroke-miterlimit='10'
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                        />
-                      </svg>
-                    </Label>
-
-                    <div className='w-full relative h-[50px] bg-[#333333] rounded-3xl px-2'>
-                      <PhoneInput
-                        country={"us"}
-                        value={phone}
-                        onChange={(phone) => setPhone(phone)}
-                        containerClass='w-full' // Ensures the entire component takes full width
-                        inputClass='w-full h-[10px] !bg-[#333333] rounded-3xl text-5xl font-semibold text-[#B0B0B0]' // Ensures input field spans full width
-                        buttonClass='border-[#760C2A]' // Optional: styles for the country dropdown button
-                        inputStyle={{
-                          width: "100%",
-                          height: "50px",
-                          border: "none",
-                          borderRadius: "50px",
-                          backgroundColor: "#333333",
-                        }}
-                        placeholder='Enter phone number'
-                      />
-                    </div>
                   </div>
 
                   <div className='flex justify-end'>
