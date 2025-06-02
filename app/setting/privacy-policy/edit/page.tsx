@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   useGetPrivacyPolicyQuery,
   useSetPrivacyPolicyMutation,
-  useSetTermsAndConditionsMutation,
 } from "@/redux/feature/settingAPI";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -74,8 +73,10 @@ const EditPrivacyPolicy = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await setPrivacyPolicy({ description: content }).unwrap();
-      if (res?.description) {
+      const res = await setPrivacyPolicy({ content:  content }).unwrap();
+
+      if (res?.status === "success") {
+        refetch();
         toast.success("Terms and Conditions saved successfully!");
         router.push("/setting/privacy-policy");
       } else {

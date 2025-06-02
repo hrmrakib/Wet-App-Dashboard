@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard-sidebar";
-import DashboardHeader from "@/components/dashboard-header";
+import { useUpdatePasswordMutation } from "@/redux/feature/settingAPI";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ChangePasswordPage() {
   const [formData, setFormData] = useState({
@@ -24,6 +24,8 @@ export default function ChangePasswordPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [updatePassword] = useUpdatePasswordMutation();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,7 +33,7 @@ export default function ChangePasswordPage() {
     setError("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Basic validation
@@ -49,13 +51,19 @@ export default function ChangePasswordPage() {
       return;
     }
 
-    if (formData.newPassword.length < 8) {
-      setError("Password must be at least 8 characters long");
-      return;
+    const res = await updatePassword({
+      old_password: formData.currentPassword,
+      new_password: formData.newPassword,
+      confirm_password: formData.confirmPassword,
+    }).unwrap();
+
+    if (res.status === "success") {
+      toast.success("Password updated successfully");
+      router.push("/setting");
+    } else {
+      toast.error(res?.message || "Failed to update password");
     }
 
-    // Handle password change
-    console.log("Password change submitted");
     // Reset form after successful submission
     setFormData({
       currentPassword: "",

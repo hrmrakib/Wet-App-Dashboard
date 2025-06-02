@@ -28,12 +28,12 @@ const settingAPI = baseApi.injectEndpoints({
 
     updatePassword: builder.mutation({
       query: (data) => ({
-        url: `/auth/update_password/`,
+        url: `/api-auth/change_password/`,
         method: "POST",
-        body: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
+        body: data,
       }),
     }),
 
@@ -72,10 +72,10 @@ const settingAPI = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/api-apps/privacy_policies/`,
         method: "PUT",
-        body: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
+        body: data,
       }),
     }),
 
@@ -108,7 +108,6 @@ export const {
   useUpdatePasswordMutation,
   useGetTermsAndConditionsQuery,
   useSetTermsAndConditionsMutation,
-
   useGetPrivacyPolicyQuery,
   useSetPrivacyPolicyMutation,
   useGetTrustAndSafetyQuery,
