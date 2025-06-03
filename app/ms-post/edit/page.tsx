@@ -20,7 +20,6 @@ export default function EditPost({ params }: { params: { id: string } }) {
   // In a real app, you would fetch the post data based on the ID
   useEffect(() => {
     // Simulating data fetching
-    console.log(`Fetching post with ID: ${params.id}`);
   }, [params.id]);
 
   const handleChange = (

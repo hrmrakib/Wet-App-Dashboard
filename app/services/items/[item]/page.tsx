@@ -33,7 +33,6 @@ export default function IssuesFrequent() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const params = useParams();
-  console.log(params.slug);
 
   const {
     data: items,
@@ -49,11 +48,8 @@ export default function IssuesFrequent() {
   }
 
   const handleDelete = async (id: string) => {
-    console.log(id);
-
     try {
       const res = await deleteService(id).unwrap();
-      console.log("Service deleted successfully:", res);
       await refetch();
 
       if (res.success) {
@@ -65,8 +61,6 @@ export default function IssuesFrequent() {
 
     setShowDeleteDialog(false);
   };
-
-  console.log("items", items);
 
   return (
     <div className='min-h-screen bg-black p-4 md:p-6'>

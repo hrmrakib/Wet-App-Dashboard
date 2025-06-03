@@ -50,7 +50,6 @@ const EditAboutUs = () => {
 
         quill.on("text-change", () => {
           const html = quill.root.innerHTML;
-          console.log("HTML content:", html);
         });
       }
     };

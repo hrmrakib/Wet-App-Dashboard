@@ -8,7 +8,6 @@ import {
   useGetServiceByIdQuery,
   useUpdateServiceMutation,
 } from "@/redux/feature/servicesAPI";
-import { set } from "date-fns";
 
 export default function EditService() {
   const router = useRouter();
@@ -20,6 +19,7 @@ export default function EditService() {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const params = useParams();
+
   const { data: serviceData, isLoading } = useGetServiceByIdQuery(
     params?.slug as string
   );
@@ -60,7 +60,6 @@ export default function EditService() {
   };
   const handleSubmit = async () => {
     // In a real app, you would save the changes to a database
-    // console.log({ title, description, websiteUrl, youtubeUrl, image });
 
     const formData = new FormData();
 
@@ -81,7 +80,6 @@ export default function EditService() {
         id: params?.slug as string,
       }).unwrap();
 
-      console.log("Service updated response:", response);
 
       if (response?.status === "success") {
         router.push("/services");
@@ -93,7 +91,6 @@ export default function EditService() {
     }
   };
 
-  console.log(image, imagePreview);
 
   return (
     <div className='bg-black flex items-center justify-center p-4'>

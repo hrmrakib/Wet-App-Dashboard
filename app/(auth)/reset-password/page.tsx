@@ -62,7 +62,6 @@ export default function CreatePasswordPage() {
       // Simulate API call to update password
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      console.log("Password updated with data:", formData);
       // In a real app, redirect to dashboard or login page after success
     } catch (error) {
       console.error("Error updating password:", error);

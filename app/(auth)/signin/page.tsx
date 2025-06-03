@@ -72,7 +72,6 @@ export default function SignInPage() {
         password: formData.password,
       });
 
-      console.log("signin", res);
 
       if (res?.data?.status === "success") {
         localStorage.setItem("access_token", res?.data?.access_token);

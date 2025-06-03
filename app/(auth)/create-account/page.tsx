@@ -76,7 +76,6 @@ export default function SignUpPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      console.log("Form submitted with data:", formData);
       setSubmitSuccess(true);
 
       // Reset form after successful submission
@@ -99,7 +98,6 @@ export default function SignUpPage() {
   };
 
   const handleSocialLogin = (provider: string) => {
-    console.log(`Logging in with ${provider}`);
     // Implement social login logic here
   };
 

@@ -9,7 +9,6 @@ export default function PrivacyPolicyPage() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  console.log("privacyPolicy", privacyPolicy?.data[0]?.content);
 
   return (
     <div className='flex min-h-screen bg-transparent text-white'>

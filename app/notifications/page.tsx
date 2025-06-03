@@ -45,7 +45,6 @@ export default function NotificationsList() {
     );
   }
 
-  console.log("notifications", notificationsData?.notifications);
 
   return (
     <div className='px-5'>

@@ -49,14 +49,7 @@ export default function AddSubscription() {
       return;
     }
 
-    // In a real app, you would save this data to a database
-    console.log({
-      image,
-      packageName,
-      packageAmount,
-      packageDuration,
-      features,
-    });
+   
 
     // Navigate back to the subscriptions page
     router.push("/");

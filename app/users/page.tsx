@@ -139,7 +139,6 @@ function TransactionTable() {
     setSelectedUser(user);
     setIsModalOpen(true);
 
-    console.log("user", user);
   };
 
   const handlePageChange = (page: number) => {
@@ -148,7 +147,6 @@ function TransactionTable() {
     }
   };
 
-  // console.log(singleUser);
 
   return (
     <>

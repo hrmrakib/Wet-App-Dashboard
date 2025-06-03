@@ -29,7 +29,6 @@ export default function PersonalInformationPage() {
     }
   }, [userProfile]);
 
-  console.log(userProfile);
 
   return (
     <div className='flex min-h-screen bg-[#000000]'>

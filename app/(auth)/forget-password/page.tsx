@@ -42,7 +42,6 @@ export default function ForgetPassword() {
         router.push("/verify-otp");
       }
 
-      console.log(response);
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrors({ submit: "Invalid credentials. Please try again." });

@@ -33,7 +33,6 @@ export default function CreateService({ params }: { params: { id: string } }) {
 
   const handleSubmit = async () => {
     // In a real app, you would save the changes to a database
-    // console.log({ title, description, websiteUrl, youtubeUrl, image });
 
     if (!title || !description || !websiteUrl || !externalSourceTitle) {
       alert("Please fill in all required fields.");

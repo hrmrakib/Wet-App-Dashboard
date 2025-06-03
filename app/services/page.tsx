@@ -38,11 +38,9 @@ export default function IssuesFrequent() {
   }
 
   const handleDelete = async (id: string) => {
-    console.log(id);
 
     try {
       const res = await deleteService(id).unwrap();
-      console.log("Service deleted successfully:", res);
       await refetch();
 
       if (res.success) {
@@ -95,7 +93,7 @@ export default function IssuesFrequent() {
                 </p>
                 <div className='flex justify-center gap-2 mb-4'>
                   <Link
-                    href={`/services/${service?.service_id}`}
+                    href={`/services/items/${service?.service_id}`}
                     className='flex items-center gap-1 bg-transparent hover:bg-zinc-600 text-white border border-[#5CE1E6] rounded px-2 py-1 text-xs transition-colors'
                   >
                     <span>View Its Item</span>
