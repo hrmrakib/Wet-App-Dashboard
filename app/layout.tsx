@@ -13,15 +13,13 @@ export const metadata: Metadata = {
   generator: "dev",
 };
 
-const username = "Sharon";
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' upword-verified='true'>
       <body upword-verified='true'>
         <Toaster position='top-center' />
         <Providers>
@@ -29,7 +27,7 @@ export default function RootLayout({
             <div className='flex min-h-screen bg-[#000] w-full'>
               <DashboardSidebar />
               <div className='flex-1 w-full bg-[#000]'>
-                <DashboardHeader username={username} />
+                <DashboardHeader />
                 {children}
               </div>
             </div>

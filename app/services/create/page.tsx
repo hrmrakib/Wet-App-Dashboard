@@ -45,7 +45,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
     }
 
     const formData = new FormData();
-
+ 
     formData.append("title", title);
     formData.append("short_description", description);
     formData.append("external_source_title", externalSourceTitle);

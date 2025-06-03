@@ -8,6 +8,7 @@ import {
   useGetServiceByIdQuery,
   useUpdateServiceMutation,
 } from "@/redux/feature/servicesAPI";
+import { set } from "date-fns";
 
 export default function EditService() {
   const router = useRouter();
@@ -18,8 +19,7 @@ export default function EditService() {
   const [premium, setPremium] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const params = useParams(); // Assuming the ID is passed as a query parameter
-
+  const params = useParams();
   const { data: serviceData, isLoading } = useGetServiceByIdQuery(
     params?.slug as string
   );
@@ -33,10 +33,11 @@ export default function EditService() {
       setDescription(service?.short_description);
       setWebsiteUrl(service?.external_source_url);
       setExternalSourceTitle(service?.external_source_title);
-
       setPremium(service?.is_premium === "true");
-      // setImagePreview(service?.icon);
-      setImage(service?.icon);
+
+      if (service?.icon) {
+        setImagePreview(`${process.env.NEXT_PUBLIC_API_URL}${service.icon}`);
+      }
     }
   }, [serviceData]);
 
@@ -48,10 +49,15 @@ export default function EditService() {
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setImagePreview(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = async () => {
     // In a real app, you would save the changes to a database
     // console.log({ title, description, websiteUrl, youtubeUrl, image });
@@ -86,6 +92,8 @@ export default function EditService() {
       console.error("Error updating service:", error);
     }
   };
+
+  console.log(image, imagePreview);
 
   return (
     <div className='bg-black flex items-center justify-center p-4'>
@@ -142,8 +150,11 @@ export default function EditService() {
 
               <div>
                 <X
-                  onClick={() => setImagePreview(null)}
-                  className='absolute top-0 right-0 text-white hover:text-gray-300 transition-colors'
+                  onClick={() => {
+                    setImage(null);
+                    setImagePreview(null);
+                  }}
+                  className='absolute top-0 right-0 text-white hover:text-gray-300 transition-colors cursor-pointer'
                 />
               </div>
             </div>

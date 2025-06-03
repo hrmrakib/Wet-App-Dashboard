@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
-import { useGetAllUsersQuery } from "@/redux/feature/userAPI";
+import {
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+} from "@/redux/feature/userAPI";
 import DetailRow from "@/components/DetailRow";
 
 interface IUser {
@@ -135,6 +138,8 @@ function TransactionTable() {
   const openUserModal = (user: any) => {
     setSelectedUser(user);
     setIsModalOpen(true);
+
+    console.log("user", user);
   };
 
   const handlePageChange = (page: number) => {
@@ -143,7 +148,8 @@ function TransactionTable() {
     }
   };
 
-  console.log(users);
+  // console.log(singleUser);
+
   return (
     <>
       <div className='overflow-hidden bg-[#333333] rounded-md'>
@@ -292,17 +298,24 @@ function TransactionTable() {
             </h2>
 
             <div className='space-y-6'>
-              <DetailRow label='User ID:' value={"userId"} />
-              <DetailRow label='Date' value={"formattedDate"} />
-              <DetailRow label='User Name' value={"name"} />
+              <DetailRow label='User ID:' value={selectedUser?.id} />
+              <DetailRow label='Email' value={selectedUser?.email} />
+              <DetailRow label='User Name' value={selectedUser?.full_name} />
               <DetailRow label='Transaction Amount' value={"amount"} />
               <DetailRow
-                label='Subscription Purchased'
-                value={"subscription"}
+                label='Subscription Status'
+                value={selectedUser?.subscription_status}
+              />
+              <DetailRow
+                label='Package Name'
+                value={selectedUser?.package_name}
               />
             </div>
 
-            <Button className='mt-6 w-full bg-[#5CE1E6] hover:bg-[#5ce1e6b7]'>
+            <Button
+              onClick={() => setIsModalOpen(false)}
+              className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7]'
+            >
               Okay
             </Button>
           </div>

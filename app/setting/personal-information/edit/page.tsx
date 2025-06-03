@@ -14,21 +14,23 @@ import {
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from "@/redux/feature/settingAPI";
+import { toast } from "sonner";
 
 export default function PersonalInformationEditPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     profileImage: "",
   });
 
-  const [profileImage, setProfileImage] = useState<string>("/admin.jpg");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [avater, setAvater] = useState<string | File | null>(null);
 
-  const { data: userProfile } = useGetProfileQuery(undefined, {
+  const { data: userProfile, isLoading } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+
   const [updateProfile] = useUpdateProfileMutation();
 
   useEffect(() => {
@@ -36,7 +38,6 @@ export default function PersonalInformationEditPage() {
       setFormData({
         name: userProfile?.full_name,
         email: userProfile?.email,
-        phone: userProfile?.phone,
         profileImage: userProfile?.profile_pic,
       });
     }
@@ -47,10 +48,6 @@ export default function PersonalInformationEditPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCountryCodeChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, countryCode: value }));
-  };
-
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
@@ -58,6 +55,7 @@ export default function PersonalInformationEditPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setAvater(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
@@ -71,15 +69,29 @@ export default function PersonalInformationEditPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await updateProfile({
-      full_name: formData.name,
-      email: formData.email,
-      profile_pic: profileImage,
-    });
-    // Handle form submission
-    console.log(".........:", res);
-    // Show success message or handle errors
+    const formDataHere = new FormData();
+
+    formDataHere.append("full_name", formData.name);
+    formDataHere.append("email", formData.email);
+
+    if (avater) {
+      formDataHere.append("profile_pic", avater);
+    }
+
+    const res = await updateProfile(formDataHere);
+
+    if (res?.data?.status === "success") {
+      toast.success("Profile updated successfully!");
+    }
+
+    if (res?.data?.status === "error") {
+      toast.error("Failed to update profile!");
+    }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='flex'>
@@ -107,15 +119,24 @@ export default function PersonalInformationEditPage() {
                     onClick={handleImageClick}
                   >
                     <div className='w-32 h-32 rounded-full overflow-hidden relative'>
-                      <Image
-                        src={
-                          `${process.env.NEXT_PUBLIC_API_URL}${formData?.profileImage}` ||
-                          "/admin.jpg"
-                        }
-                        alt='Profile'
-                        fill
-                        className='object-cover'
-                      />
+                      {profileImage ? (
+                        <Image
+                          src={`${profileImage}` || "/admin.jpg"}
+                          alt='Profile'
+                          fill
+                          className='object-cover'
+                        />
+                      ) : (
+                        <Image
+                          src={
+                            `${process.env.NEXT_PUBLIC_API_URL}${userProfile?.profile_pic}` ||
+                            "/admin.jpg"
+                          }
+                          alt='Profile'
+                          fill
+                          className='object-cover'
+                        />
+                      )}
                     </div>
                     <div className='absolute bottom-0 right-0 bg-white p-1 rounded-full border border-gray-200'>
                       <Camera className='h-5 w-5 text-gray-600' />
@@ -180,14 +201,14 @@ export default function PersonalInformationEditPage() {
                         <path
                           d='M11.333 13.6673H4.66634C2.66634 13.6673 1.33301 12.6673 1.33301 10.334V5.66732C1.33301 3.33398 2.66634 2.33398 4.66634 2.33398H11.333C13.333 2.33398 14.6663 3.33398 14.6663 5.66732V10.334C14.6663 12.6673 13.333 13.6673 11.333 13.6673Z'
                           stroke='#B0B0B0'
-                          stroke-miterlimit='10'
+                          strokeMiterlimit='10'
                           strokeLinecap='round'
                           strokeLinejoin='round'
                         />
                         <path
                           d='M11.3337 6L9.24699 7.66667C8.56032 8.21333 7.43366 8.21333 6.74699 7.66667L4.66699 6'
                           stroke='#B0B0B0'
-                          stroke-miterlimit='10'
+                          strokeMiterlimit='10'
                           strokeLinecap='round'
                           strokeLinejoin='round'
                         />
