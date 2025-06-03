@@ -85,7 +85,6 @@ export default function NotificationForm() {
     try {
       const result = await sendNotification(formData).unwrap();
 
-
       if (result?.status === "success") {
         setStatus({
           type: "success",

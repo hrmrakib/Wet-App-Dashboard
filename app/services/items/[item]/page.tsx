@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
   useDeleteServiceMutation,
-  useGetAllServicesQuery,
   useViewAllItemsQuery,
 } from "@/redux/feature/servicesAPI";
 import { useParams } from "next/navigation";
@@ -34,11 +33,13 @@ export default function IssuesFrequent() {
   const [isDeleted, setIsDeleted] = useState(false);
   const params = useParams();
 
+  console.log("params", params);
+
   const {
     data: items,
     isLoading,
     refetch,
-  } = useViewAllItemsQuery(params.slug, {
+  } = useViewAllItemsQuery(params?.item, {
     refetchOnMountOrArgChange: true,
   });
   const [deleteService] = useDeleteServiceMutation();
@@ -70,11 +71,11 @@ export default function IssuesFrequent() {
             Items of {items?.service_title || "Service"}
           </h2>
           <Link
-            href='/items/create'
+            href='/services/create'
             className='flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-[#E6E6E6] rounded-full px-4 py-2 transition-colors'
           >
             <Plus size={20} className='text-[#E6E6E6]' />
-            <span>Add Service</span>
+            <span>Add Item</span>
           </Link>
         </div>
 

@@ -12,7 +12,17 @@ const authAPI = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    createItem: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/api-apps/CreateItem/`,
+        method: "POST",
+        body: data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useViewAllItemsQuery } = authAPI;
+export const { useViewAllItemsQuery, useCreateItemMutation } = authAPI;
