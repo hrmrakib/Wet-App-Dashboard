@@ -71,7 +71,7 @@ export default function IssuesFrequent() {
             Items of {items?.service_title || "Service"}
           </h2>
           <Link
-            href='/services/create'
+            href='/services/item-create'
             className='flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-[#E6E6E6] rounded-full px-4 py-2 transition-colors'
           >
             <Plus size={20} className='text-[#E6E6E6]' />
@@ -103,33 +103,10 @@ export default function IssuesFrequent() {
                 <p className='text-[#E6E6E6] text-xs leading-loose mb-4'>
                   {item?.short_description}
                 </p>
-                {/* <div className='flex justify-center gap-2 mb-4'>
-                  <Link
-                    href={`/items/${item?.item_id}`}
-                    className='flex items-center gap-1 bg-transparent hover:bg-zinc-600 text-white border border-[#5CE1E6] rounded px-2 py-1 text-xs transition-colors'
-                  >
-                    <span>View Its Item</span>
-
-                    <svg
-                      width='16'
-                      height='16'
-                      viewBox='0 0 16 16'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M4.00003 12.6666L12.6667 3.99997M12.6667 3.99997V12.32M12.6667 3.99997H4.3467'
-                        stroke='#5CE1E6'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </Link>
-                </div> */}
               </div>
               <div className='mt-auto p-4 flex gap-2'>
                 <Link
-                  href={`/items/edit${item?.item_id}/edit`}
+                  href={`/services/item-edit/${item?.item_id}`}
                   className='flex-1 bg-[#5CE1E6] hover:bg-[#4de5eb] text-[#275F61] text-center rounded py-2 text-sm transition-colors'
                 >
                   Edit

@@ -38,7 +38,6 @@ export default function IssuesFrequent() {
   }
 
   const handleDelete = async (id: string) => {
-
     try {
       const res = await deleteService(id).unwrap();
       await refetch();
@@ -84,7 +83,7 @@ export default function IssuesFrequent() {
                       alt={service?.title}
                       width={164}
                       height={164}
-                      className='object-contain'
+                      className='object-cover'
                     />
                   </div>
                 </div>
