@@ -19,6 +19,7 @@ import {
   useViewAllItemsQuery,
 } from "@/redux/feature/servicesAPI";
 import { useParams } from "next/navigation";
+import { useDeleteItemMutation } from "@/redux/feature/itemAPI";
 
 interface ServicesCardProps {
   item_id: string;
@@ -33,7 +34,7 @@ export default function IssuesFrequent() {
   const [isDeleted, setIsDeleted] = useState(false);
   const params = useParams();
 
-  console.log("params", params);
+  console.log("params", params?.item);
 
   const {
     data: items,
@@ -42,7 +43,7 @@ export default function IssuesFrequent() {
   } = useViewAllItemsQuery(params?.item, {
     refetchOnMountOrArgChange: true,
   });
-  const [deleteService] = useDeleteServiceMutation();
+  const [deleteItemMutation] = useDeleteItemMutation();
 
   if (isDeleted) {
     return null;
@@ -50,9 +51,9 @@ export default function IssuesFrequent() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await deleteService(id).unwrap();
-      await refetch();
+      const res = await deleteItemMutation(id).unwrap();
 
+      console.log(res);
       if (res.success) {
         await refetch();
       }
@@ -71,7 +72,7 @@ export default function IssuesFrequent() {
             Items of {items?.service_title || "Service"}
           </h2>
           <Link
-            href='/services/item-create'
+            href={`/services/item-create/${params?.item}`}
             className='flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-[#E6E6E6] rounded-full px-4 py-2 transition-colors'
           >
             <Plus size={20} className='text-[#E6E6E6]' />
@@ -151,6 +152,12 @@ export default function IssuesFrequent() {
               </Dialog>
             </div>
           ))}
+
+          {items?.items?.length === undefined && (
+            <div className='col-span-4 text-center text-gray-200 p-10'>
+              No items found.
+            </div>
+          )}
         </div>
       </div>
     </div>

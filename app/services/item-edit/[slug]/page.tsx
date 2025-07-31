@@ -2,91 +2,74 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, Youtube, ExternalLink, X } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 import {
-  useGetServiceByIdQuery,
-  useUpdateServiceMutation,
-} from "@/redux/feature/servicesAPI";
+  useCreateItemMutation,
+  useUpdateItemMutation,
+  useViewSingleItemQuery,
+} from "@/redux/feature/itemAPI";
+import { set } from "date-fns";
 
-export default function EditService() {
+export default function CreateService() {
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [shortTitle, setShortTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [externalSourceTitle, setExternalSourceTitle] = useState("");
-  const [premium, setPremium] = useState(false);
+  const [externalSourceURL, setExternalSourceURL] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const params = useParams();
+  const [getServerImage, setGetServerImage] = useState<string | null>(null);
 
-  const { data: serviceData, isLoading } = useGetServiceByIdQuery(
+  const params = useParams();
+  const [updateItemMutation] = useUpdateItemMutation();
+  const { data: serviceData, isLoading } = useViewSingleItemQuery(
     params?.slug as string
   );
 
-  const [updateService] = useUpdateServiceMutation();
-
   useEffect(() => {
-    if (serviceData) {
-      const service = serviceData?.service;
-      setTitle(service?.title);
-      // setDescription(service?.short_description);
-      // setWebsiteUrl(service?.external_source_url);
-      // setExternalSourceTitle(service?.external_source_title);
-      // setPremium(service?.is_premium === "true");
-
-      if (service?.icon) {
-        setImagePreview(`${process.env.NEXT_PUBLIC_API_URL}${service.icon}`);
-      }
-    }
+    setTitle(serviceData?.data?.title);
+    setShortTitle(serviceData?.data?.shortTitle);
+    setDescription(serviceData?.data?.description);
+    setExternalSourceURL(serviceData?.data?.external_source_url);
+    setGetServerImage(serviceData?.data?.image);
   }, [serviceData]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImage(file);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setImagePreview(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
-  const handleSubmit = async () => {
-    // In a real app, you would save the changes to a database
 
+  const handleSubmit = async () => {
     const formData = new FormData();
 
     formData.append("title", title);
-    formData.append("short_description", description);
-    formData.append("external_source_url", websiteUrl);
-    formData.append("external_source_title", externalSourceTitle);
-    formData.append("type", "service");
-    formData.append("is_premium", premium ? "true" : "false");
+    if (shortTitle) {
+      formData.append("short_title", shortTitle);
+    }
+    formData.append("description", description);
+    formData.append("external_source_url", externalSourceURL);
+    formData.append("item_id", params?.slug as string);
 
     if (image) {
-      formData.append("icon", image);
+      formData.append("image", image);
     }
 
     try {
-      const response = await updateService({
-        data: formData,
-        id: params?.slug as string,
-      }).unwrap();
+      const response = await updateItemMutation(formData).unwrap();
 
       if (response?.status === "success") {
+        toast.success("Item updated successfully!");
         router.push("/services");
       } else {
-        console.error("Failed to update service:", response);
+        console.error("Failed to update item:", response);
       }
     } catch (error) {
-      console.error("Error updating service:", error);
+      console.error("Error creating service:", error);
     }
   };
 
@@ -99,7 +82,7 @@ export default function EditService() {
             className='text-white flex items-center hover:text-gray-300 transition-colors'
           >
             <ArrowLeft size={20} className='mr-2' />
-            <span>Back</span>
+            <span>Edit Frequment</span>
           </button>
 
           <button
@@ -120,38 +103,45 @@ export default function EditService() {
             required
             placeholder='Enter Item Title'
           />
+          {serviceData?.data?.shortTitle && (
+            <input
+              type='text'
+              value={shortTitle}
+              onChange={(e) => setShortTitle(e.target.value)}
+              className='w-full p-2 bg-zinc-700 border border-zinc-600 rounded text-white'
+              required
+              placeholder='Enter Item Short Title'
+            />
+          )}
 
           {imagePreview ? (
-            <div className='flex justify-center py-4'>
+            <div className='relative flex justify-center py-4'>
               <Image
-                src={imagePreview || "/placeholder.png"}
+                src={imagePreview}
                 alt={title}
                 width={190}
                 height={190}
                 className='object-contain'
               />
+
+              <div>
+                <X
+                  onClick={() => setImagePreview(null)}
+                  className='absolute top-0 right-0 text-white hover:text-gray-300 transition-colors'
+                />
+              </div>
             </div>
           ) : (
-            <div className='relative flex justify-center py-4'>
-              {image ? (
+            <div className='flex justify-center py-4'>
+              {getServerImage && (
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${image}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${getServerImage}`}
                   alt={title}
                   width={190}
                   height={190}
                   className='object-contain'
                 />
-              ) : null}
-
-              <div>
-                <X
-                  onClick={() => {
-                    setImage(null);
-                    setImagePreview(null);
-                  }}
-                  className='absolute top-0 right-0 text-white hover:text-gray-300 transition-colors cursor-pointer'
-                />
-              </div>
+              )}
             </div>
           )}
           <input
@@ -161,71 +151,29 @@ export default function EditService() {
             className='w-full p-2 text-white bg-zinc-700 rounded border border-zinc-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-400 file:text-black hover:file:bg-cyan-500'
           />
 
-          {/* <textarea
+          <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
             className='w-full p-3 bg-zinc-700 border border-zinc-600 rounded text-white resize-none'
             placeholder='Enter Service Description'
-          /> */}
+          />
 
-          {/* <div className='flex flex-wrap gap-2'>
+          <div className='flex flex-wrap gap-2'>
             <div className='flex items-center bg-zinc-700 rounded overflow-hidden flex-1'>
               <input
-                type='text'
-                value={externalSourceTitle}
-                onChange={(e) => setExternalSourceTitle(e.target.value)}
-                className='p-2 bg-zinc-700 border-none text-white text-sm w-full'
-                required
-                placeholder='External Source Title'
-              />
-            </div>
-
-            <div className='flex items-center bg-zinc-700 rounded overflow-hidden flex-1'>
-              <input
-                type='text'
-                value={websiteUrl}
-                onChange={(e) => setWebsiteUrl(e.target.value)}
+                type='url'
+                value={externalSourceURL}
+                onChange={(e) => setExternalSourceURL(e.target.value)}
                 className='p-2 bg-zinc-700 border-none text-white text-sm flex-1 min-w-0 outline-none'
-                placeholder='Enter Website URL'
+                placeholder='https://example.com/action'
+                required
               />
               <button className='p-2 bg-zinc-700 text-white'>
                 <ExternalLink size={16} />
               </button>
             </div>
-          </div> */}
-
-          {/* <div className='flex flex-col mt-20'>
-            <label className='text-white block mb-2 text-xl'>
-              Is Premium Service
-            </label>
-            <div className='flex items-center space-x-4 mt-2'>
-              <div>
-                <input
-                  id='premium'
-                  type='checkbox'
-                  checked={premium}
-                  onChange={(e) => setPremium(e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='premium' className='ml-2 text-white'>
-                  Yes
-                </label>
-              </div>
-              <div>
-                <input
-                  id='not-premium'
-                  type='checkbox'
-                  checked={!premium}
-                  onChange={(e) => setPremium(!e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='not-premium' className='ml-2 text-white'>
-                  No
-                </label>
-              </div>
-            </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

@@ -133,7 +133,7 @@ export default function IssuesFrequent() {
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
               >
-                <DialogContent className='bg-[#000000a9] bg-opacity-40 text-white border-zinc-700'>
+                <DialogContent className='bg-[#00000034] bg-opacity-90 text-white border-zinc-700'>
                   <DialogHeader>
                     <DialogTitle>Delete {service?.title}</DialogTitle>
                     <DialogDescription className='text-gray-400'>

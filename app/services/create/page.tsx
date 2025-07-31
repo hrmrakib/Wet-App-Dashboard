@@ -13,6 +13,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
   const [description, setDescription] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [externalSourceTitle, setExternalSourceTitle] = useState("");
+  const [service, setService] = useState("");
   const [premium, setPremium] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
     formData.append("short_description", description);
     formData.append("external_source_title", externalSourceTitle);
     formData.append("external_source_url", websiteUrl);
-    formData.append("type", "service");
+    formData.append("type", service);
     formData.append("is_premium", premium ? "true" : "false");
 
     if (image) {
@@ -172,35 +173,52 @@ export default function CreateService({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <div className='flex flex-col mt-20'>
-            <label className='text-white block mb-2 text-xl'>
-              Is Premium Service
-            </label>
-            <div className='flex items-center space-x-4 mt-2'>
-              <div>
-                <input
-                  id='premium'
-                  type='checkbox'
-                  checked={premium}
-                  onChange={(e) => setPremium(e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='premium' className='ml-2 text-white'>
-                  Yes
-                </label>
+          <div className='flex items-center justify-between bg-zinc-700 rounded'>
+            <div className='flex flex-col mt-20'>
+              <label className='text-white block mb-2 text-xl'>
+                Is Premium Service
+              </label>
+              <div className='flex items-center space-x-4 mt-2'>
+                <div>
+                  <input
+                    id='premium'
+                    type='checkbox'
+                    checked={premium}
+                    onChange={(e) => setPremium(e.target.checked)}
+                    className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
+                  />
+                  <label htmlFor='premium' className='ml-2 text-white'>
+                    Yes
+                  </label>
+                </div>
+                <div>
+                  <input
+                    id='not-premium'
+                    type='checkbox'
+                    checked={!premium}
+                    onChange={(e) => setPremium(!e.target.checked)}
+                    className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
+                  />
+                  <label htmlFor='not-premium' className='ml-2 text-white'>
+                    No
+                  </label>
+                </div>
               </div>
-              <div>
-                <input
-                  id='not-premium'
-                  type='checkbox'
-                  checked={!premium}
-                  onChange={(e) => setPremium(!e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='not-premium' className='ml-2 text-white'>
-                  No
-                </label>
-              </div>
+            </div>
+
+            <div>
+              <label className='text-white block mb-2 text-xl'>
+                Service Type
+              </label>
+              <select
+                value={service}
+                onChange={(e) => setService(e.target.value)}
+                className='w-full p-3 bg-zinc-700 border border-zinc-600 rounded text-white'
+              >
+                <option value=''>Select Service Type</option>
+                <option value='service'>Service</option>
+                <option value='product'>Product</option>
+              </select>
             </div>
           </div>
         </div>

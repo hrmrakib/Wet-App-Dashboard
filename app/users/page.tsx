@@ -42,6 +42,8 @@ function TransactionTable() {
   const [itemsPerPage] = useState(10); // Configurable items per page
   const { data: users, isLoading } = useGetAllUsersQuery({});
 
+  console.log(users, "users");
+
   const transactions = [
     {
       id: 447,
@@ -138,7 +140,6 @@ function TransactionTable() {
   const openUserModal = (user: any) => {
     setSelectedUser(user);
     setIsModalOpen(true);
-
   };
 
   const handlePageChange = (page: number) => {
@@ -146,7 +147,6 @@ function TransactionTable() {
       setCurrentPage(page);
     }
   };
-
 
   return (
     <>

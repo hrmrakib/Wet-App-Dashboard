@@ -1,22 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Youtube, ExternalLink, X } from "lucide-react";
 import Image from "next/image";
-import { useCreateServiceMutation } from "@/redux/feature/servicesAPI";
+import {
+  useCreateServiceMutation,
+  useGetServiceByIdQuery,
+} from "@/redux/feature/servicesAPI";
 import { toast } from "sonner";
+import { useCreateItemMutation } from "@/redux/feature/itemAPI";
 
-export default function CreateService({ params }: { params: { id: string } }) {
+export default function CreateService() {
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [shortTitle, setShortTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [externalSourceTitle, setExternalSourceTitle] = useState("");
-  const [premium, setPremium] = useState(false);
+  const [externalSourceURL, setExternalSourceURL] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [createService] = useCreateServiceMutation();
+
+  const [createItemMutation] = useCreateItemMutation();
+  const params = useParams();
+  const { data: serviceData, isLoading } = useGetServiceByIdQuery(
+    params?.id as string
+  );
+  console.log("serviceData", serviceData?.service?.type);
 
   useEffect(() => {
     // In a real app, you would fetch the data based on the ID
@@ -35,7 +44,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
     // In a real app, you would save the changes to a database
     // console.log({ title, description, websiteUrl, youtubeUrl, image });
 
-    if (!title || !description || !websiteUrl || !externalSourceTitle) {
+    if (!title || !description || !externalSourceURL) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -47,22 +56,25 @@ export default function CreateService({ params }: { params: { id: string } }) {
     const formData = new FormData();
 
     formData.append("title", title);
-    formData.append("short_description", description);
-    formData.append("external_source_title", externalSourceTitle);
-    formData.append("external_source_url", websiteUrl);
-    formData.append("type", "service");
-    formData.append("is_premium", premium ? "true" : "false");
+    if (shortTitle) {
+      formData.append("short_title", shortTitle);
+    }
+    formData.append("description", description);
+    formData.append("external_source_url", externalSourceURL);
+    formData.append("service_id", params?.id as string);
 
     if (image) {
-      formData.append("icon", image);
+      formData.append("image", image);
     }
 
     try {
-      const response = await createService(formData).unwrap();
+      const response = await createItemMutation(formData).unwrap();
+
+      console.log(response);
 
       if (response?.status === "success") {
         toast.success("Service created successfully!");
-        router.push("/services");
+        router.push("/services/items/" + params?.id);
       } else {
         console.error("Failed to create service:", response);
       }
@@ -80,7 +92,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
             className='text-white flex items-center hover:text-gray-300 transition-colors'
           >
             <ArrowLeft size={20} className='mr-2' />
-            <span>Back</span>
+            <span>Edit Frequment</span>
           </button>
 
           <button
@@ -99,8 +111,18 @@ export default function CreateService({ params }: { params: { id: string } }) {
             onChange={(e) => setTitle(e.target.value)}
             className='w-full p-3 bg-zinc-700 border border-zinc-600 rounded text-white'
             required
-            placeholder='Enter Service Title'
+            placeholder='Enter Item Title'
           />
+          {serviceData?.service?.type === "shop" && (
+            <input
+              type='text'
+              value={shortTitle}
+              onChange={(e) => setShortTitle(e.target.value)}
+              className='w-full p-2 bg-zinc-700 border border-zinc-600 rounded text-white'
+              required
+              placeholder='Enter Item Short Title'
+            />
+          )}
 
           {imagePreview ? (
             <div className='relative flex justify-center py-4'>
@@ -137,31 +159,20 @@ export default function CreateService({ params }: { params: { id: string } }) {
             className='w-full p-2 text-white bg-zinc-700 rounded border border-zinc-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-400 file:text-black hover:file:bg-cyan-500'
           />
 
-          {/* <textarea
+          <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
             className='w-full p-3 bg-zinc-700 border border-zinc-600 rounded text-white resize-none'
             placeholder='Enter Service Description'
-          /> */}
+          />
 
-          {/* <div className='flex flex-wrap gap-2'>
-            <div className='flex items-center bg-zinc-700 rounded overflow-hidden flex-1'>
-              <input
-                type='text'
-                value={externalSourceTitle}
-                onChange={(e) => setExternalSourceTitle(e.target.value)}
-                className='p-2 bg-zinc-700 border-none text-white text-sm w-full'
-                required
-                placeholder='External Source Title'
-              />
-            </div>
-
+          <div className='flex flex-wrap gap-2'>
             <div className='flex items-center bg-zinc-700 rounded overflow-hidden flex-1'>
               <input
                 type='url'
-                value={websiteUrl}
-                onChange={(e) => setWebsiteUrl(e.target.value)}
+                value={externalSourceURL}
+                onChange={(e) => setExternalSourceURL(e.target.value)}
                 className='p-2 bg-zinc-700 border-none text-white text-sm flex-1 min-w-0 outline-none'
                 placeholder='https://example.com/action'
                 required
@@ -170,39 +181,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
                 <ExternalLink size={16} />
               </button>
             </div>
-          </div> */}
-
-          {/* <div className='flex flex-col mt-20'>
-            <label className='text-white block mb-2 text-xl'>
-              Is Premium Service
-            </label>
-            <div className='flex items-center space-x-4 mt-2'>
-              <div>
-                <input
-                  id='premium'
-                  type='checkbox'
-                  checked={premium}
-                  onChange={(e) => setPremium(e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='premium' className='ml-2 text-white'>
-                  Yes
-                </label>
-              </div>
-              <div>
-                <input
-                  id='not-premium'
-                  type='checkbox'
-                  checked={!premium}
-                  onChange={(e) => setPremium(!e.target.checked)}
-                  className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
-                />
-                <label htmlFor='not-premium' className='ml-2 text-white'>
-                  No
-                </label>
-              </div>
-            </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

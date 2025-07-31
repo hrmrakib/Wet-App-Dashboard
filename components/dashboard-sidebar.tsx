@@ -41,7 +41,7 @@ export default function DashboardSidebar() {
   const handleLogout = () => {
     // Perform logout actions here (clear tokens, etc.)
     // Redirect to login page
-    router.push("/login");
+    router.push("/signin");
   };
 
   if (

@@ -8,6 +8,7 @@ import {
   useGetServiceByIdQuery,
   useUpdateServiceMutation,
 } from "@/redux/feature/servicesAPI";
+import { toast } from "sonner";
 
 export default function EditService() {
   const router = useRouter();
@@ -20,9 +21,11 @@ export default function EditService() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const params = useParams();
 
-  const { data: serviceData, isLoading } = useGetServiceByIdQuery(
-    params?.slug as string
-  );
+  const {
+    data: serviceData,
+    isLoading,
+    refetch,
+  } = useGetServiceByIdQuery(params?.slug as string);
 
   const [updateService] = useUpdateServiceMutation();
 
@@ -80,9 +83,10 @@ export default function EditService() {
         id: params?.slug as string,
       }).unwrap();
 
-
       if (response?.status === "success") {
+        toast.success("Service updated successfully!");
         router.push("/services");
+        refetch();
       } else {
         console.error("Failed to update service:", response);
       }
@@ -90,7 +94,6 @@ export default function EditService() {
       console.error("Error updating service:", error);
     }
   };
-
 
   return (
     <div className='bg-black flex items-center justify-center p-4'>

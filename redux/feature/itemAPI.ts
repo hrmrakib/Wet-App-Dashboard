@@ -12,11 +12,42 @@ const authAPI = baseApi.injectEndpoints({
       }),
     }),
 
+    viewSingleItem: builder.query<any, string>({
+      query: (id) => ({
+        url: `/api-apps/ViewSingleItem/?item_id=${id}`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        method: "GET",
+      }),
+    }),
+
     createItem: builder.mutation<any, any>({
       query: (data) => ({
-        url: `/api-apps/CreateItem/`,
+        url: `/api-apps/AddNewItem/`,
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }),
+    }),
+
+    updateItem: builder.mutation<any, any>({
+      query: ({ data }) => ({
+        url: `/api-apps/UpdateItem/`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        body: data,
+      }),
+    }),
+
+    deleteItem: builder.mutation<any, any>({
+      query: (id) => ({
+        url: `/api-apps/DeleteItem/?item_id=${id}`,
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -25,4 +56,10 @@ const authAPI = baseApi.injectEndpoints({
   }),
 });
 
-export const { useViewAllItemsQuery, useCreateItemMutation } = authAPI;
+export const {
+  useViewAllItemsQuery,
+  useViewSingleItemQuery,
+  useCreateItemMutation,
+  useUpdateItemMutation,
+  useDeleteItemMutation,
+} = authAPI;

@@ -72,17 +72,13 @@ export default function SignInPage() {
         password: formData.password,
       });
 
+      console.log(res);
 
       if (res?.data?.status === "success") {
         localStorage.setItem("access_token", res?.data?.access_token);
-        await saveTokens(res?.data?.token);
-        // setSubmitSuccess(true);
+        await saveTokens(res?.data?.access_token);
         router.push("/");
       }
-
-      // setSubmitSuccess(true);
-
-      // In a real app, you would redirect to dashboard or home page after successful login
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrors({ submit: "Invalid credentials. Please try again." });
