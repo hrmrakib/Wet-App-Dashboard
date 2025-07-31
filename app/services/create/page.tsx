@@ -81,7 +81,7 @@ export default function CreateService({ params }: { params: { id: string } }) {
             className='text-white flex items-center hover:text-gray-300 transition-colors'
           >
             <ArrowLeft size={20} className='mr-2' />
-            <span>Edit Frequment</span>
+            <span>Back</span>
           </button>
 
           <button

@@ -94,7 +94,7 @@ export default function DashboardSidebar() {
                   pathname === "/services" || pathname.startsWith("/services")
                 }
               />
-              
+
               {/* <NavItem
                 href='/issues'
                 icon={ShieldAlert}
@@ -114,7 +114,7 @@ export default function DashboardSidebar() {
                 }
               /> */}
 
-              <NavItem
+              {/* <NavItem
                 href='/buy-products'
                 icon={ShoppingCart}
                 label='Buy Products'
@@ -122,8 +122,9 @@ export default function DashboardSidebar() {
                   pathname === "/buy-products" ||
                   pathname.startsWith("/buy-products")
                 }
-              />
-              <NavItem
+              /> */}
+
+              {/* <NavItem
                 href='/tricks-secrets'
                 icon={Siren}
                 label='Tricks & Secrets'
@@ -131,8 +132,9 @@ export default function DashboardSidebar() {
                   pathname === "/tricks-secrets" ||
                   pathname.startsWith("/tricks-secrets")
                 }
-              />
-              <NavItem
+              /> */}
+
+              {/* <NavItem
                 href='/pool-problem'
                 icon={BadgeAlert}
                 label='Pool Problem'
@@ -140,7 +142,7 @@ export default function DashboardSidebar() {
                   pathname === "/pool-problem" ||
                   pathname.startsWith("/pool-problem")
                 }
-              />
+              /> */}
               {/* <NavItem
                 href='/subscription'
                 icon={Crown}

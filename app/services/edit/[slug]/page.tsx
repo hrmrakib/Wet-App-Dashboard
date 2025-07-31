@@ -104,7 +104,7 @@ export default function EditService() {
             className='text-white flex items-center hover:text-gray-300 transition-colors'
           >
             <ArrowLeft size={20} className='mr-2' />
-            <span>Edit Service</span>
+            <span>Back</span>
           </button>
 
           <button

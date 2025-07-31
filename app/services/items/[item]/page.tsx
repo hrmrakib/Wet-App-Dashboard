@@ -153,9 +153,14 @@ export default function IssuesFrequent() {
             </div>
           ))}
 
-          {items?.items?.length === undefined && (
+          {items?.items?.length === undefined && !isLoading && (
             <div className='col-span-4 text-center text-gray-200 p-10'>
               No items found.
+            </div>
+          )}
+          {isLoading && (
+            <div className='col-span-4 text-center text-gray-200 p-10 text-2xl'>
+              Loading items...
             </div>
           )}
         </div>

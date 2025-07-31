@@ -13,21 +13,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { EarningsChart } from "@/components/EarningChart";
 import Image from "next/image";
 
 export default function DashboardContent() {
   return (
     <main className='bg-[#000] w-full p-4 md:p-6'>
       <section className='mb-8'>
-        {/* <h2 className='mb-4 text-[32px] font-medium text-primary'>Overview</h2> */}
         <div className='ontainer mx-auto'>
           <div className='flex items-center gap-14 flex-wrap'>
             <StatCard title='Total User' value='520' icon='/user.png' />
@@ -36,15 +27,11 @@ export default function DashboardContent() {
               value='$12300'
               icon='/earning.png'
             />
-            {/* <StatCard title='Total Subscriptions' value='1430' /> */}
           </div>
         </div>
       </section>
 
       <section>
-        {/* <h2 className='mb-4 text-[28px] font-medium text-primary'>
-          Transaction
-        </h2> */}
         <TransactionTable />
       </section>
     </main>
@@ -75,7 +62,7 @@ function TransactionTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Configurable items per page
+  const [itemsPerPage] = useState(10);
 
   const transactions = [
     {
@@ -173,13 +160,13 @@ function TransactionTable() {
   const [chartData, setChartData] = useState<
     { month: string; amount: number }[]
   >([]);
- 
+
   const openUserModal = (user: any) => {
     setSelectedUser(user);
     setIsModalOpen(true);
   };
 
-  const handlePageChange = (page: number) => { 
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

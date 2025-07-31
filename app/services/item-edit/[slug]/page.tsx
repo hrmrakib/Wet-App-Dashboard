@@ -10,7 +10,6 @@ import {
   useUpdateItemMutation,
   useViewSingleItemQuery,
 } from "@/redux/feature/itemAPI";
-import { set } from "date-fns";
 
 export default function CreateService() {
   const router = useRouter();
@@ -23,10 +22,12 @@ export default function CreateService() {
   const [getServerImage, setGetServerImage] = useState<string | null>(null);
 
   const params = useParams();
+  const slug = params?.slug as string;
+
   const [updateItemMutation] = useUpdateItemMutation();
-  const { data: serviceData, isLoading } = useViewSingleItemQuery(
-    params?.slug as string
-  );
+  const { data: serviceData } = useViewSingleItemQuery(params?.slug as string);
+
+  console.log(".slug", slug);
 
   useEffect(() => {
     setTitle(serviceData?.data?.title);
@@ -46,32 +47,57 @@ export default function CreateService() {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-
+    formData.append("item_id", slug);
     formData.append("title", title);
-    if (shortTitle) {
-      formData.append("short_title", shortTitle);
-    }
+    if (shortTitle) formData.append("short_title", shortTitle);
     formData.append("description", description);
     formData.append("external_source_url", externalSourceURL);
-    formData.append("item_id", params?.slug as string);
-
-    if (image) {
-      formData.append("image", image);
-    }
+    if (image) formData.append("image", image);
 
     try {
       const response = await updateItemMutation(formData).unwrap();
 
       if (response?.status === "success") {
         toast.success("Item updated successfully!");
-        router.push("/services");
+        router.push("/services/items/" + slug);
       } else {
         console.error("Failed to update item:", response);
+        toast.error("Update failed.");
       }
     } catch (error) {
       console.error("Error creating service:", error);
+      toast.error("Something went wrong while updating.");
     }
   };
+
+  // const handleSubmit = async () => {
+  //   const formData = new FormData();
+
+  //   formData.append("item_id", slug);
+  //   formData.append("title", title);
+  //   if (shortTitle) {
+  //     formData.append("short_title", shortTitle);
+  //   }
+  //   formData.append("description", description);
+  //   formData.append("external_source_url", externalSourceURL);
+
+  //   if (image) {
+  //     formData.append("image", image);
+  //   }
+
+  //   try {
+  //     const response = await updateItemMutation(formData).unwrap();
+
+  //     if (response?.status === "success") {
+  //       toast.success("Item updated successfully!");
+  //       router.push("/services");
+  //     } else {
+  //       console.error("Failed to update item:", response);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating service:", error);
+  //   }
+  // };
 
   return (
     <div className='bg-black flex items-center justify-center p-4'>
