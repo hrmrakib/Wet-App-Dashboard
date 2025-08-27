@@ -1,7 +1,8 @@
 "use client";
 
-import { Info, X } from "lucide-react";
+import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,33 +13,24 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
-import {
-  useGetAllUsersQuery,
-  useGetUserByIdQuery,
-  useUpdateUserProfileMutation,
-} from "@/redux/feature/userAPI";
-import DetailRow from "@/components/DetailRow";
-import { Switch } from "@/components/ui/switch";
-import { FadeLoader } from "react-spinners";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-interface IUser {
-  id: number;
-  full_name: string;
-  email: string;
-  created_on: string;
-}
+import Image from "next/image";
 
 export default function DashboardContent() {
   return (
     <main className='bg-[#000] w-full p-4 md:p-6'>
+      <section className='mb-8'>
+        <div className='ontainer mx-auto'>
+          <div className='flex items-center gap-14 flex-wrap'>
+            <StatCard title='Total User' value='520' icon='/user.png' />
+            <StatCard
+              title='Total Earnings'
+              value='$12300'
+              icon='/earning.png'
+            />
+          </div>
+        </div>
+      </section>
+
       <section>
         <TransactionTable />
       </section>
@@ -46,15 +38,31 @@ export default function DashboardContent() {
   );
 }
 
+interface StatCardProps {
+  title: string;
+  value: string;
+  icon: string;
+}
+
+function StatCard({ title, value, icon }: StatCardProps) {
+  return (
+    <Card className='overflow-hidden bg-[#333333] w-full md:max-w-[380px] h-[161px] flex items-center'>
+      <CardContent className='flex items-center gap-10 p-6 ml-5'>
+        <Image src={icon} alt='icon' width={80} height={80} />
+        <div className='flex flex-col items-center justify-center'>
+          <h3 className='mb-2 text-[#B0B0B0]'>{title}</h3>
+          <p className='text-[32px] font-semibold text-[#E6E6E6]'>{value}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function TransactionTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [packageName, setPackageName] = useState("");
   const [itemsPerPage] = useState(10);
-  const [currentStatus, setCurrentStatus] = useState(false);
-  const { data: users, isLoading, refetch } = useGetAllUsersQuery({});
-  const [updateUserProfileMutation] = useUpdateUserProfileMutation();
 
   const transactions = [
     {
@@ -160,44 +168,11 @@ function TransactionTable() {
     }
   };
 
-  const handleOkey = async (id: number) => {
-    if (!selectedUser) return;
-    setCurrentStatus(true);
-
-    const updatedData = {
-      package_name: packageName,
-      subscription_status: "subscribed",
-    };
-
-    try {
-      const res = await updateUserProfileMutation({
-        id,
-        data: updatedData,
-      }).unwrap();
-      if (res?.status === "success") {
-        setIsModalOpen(false);
-        refetch();
-      }
-    } catch (error) {
-      console.error("Failed to update user profile:", error);
-    } finally {
-      setCurrentStatus(false);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className='flex items-center justify-center py-12'>
-        <FadeLoader color='#36d7b7' />
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className='overflow-hidden bg-[#333333] rounded-md animate-spi'>
+      <div className='overflow-hidden bg-[#333333] rounded-md'>
         <h2 className='text-[32px] font-medium text-[#E6E6E6] p-6'>
-          User List
+          Recent Transactions
         </h2>
         <div className='overflow-x-auto'>
           <Table>
@@ -222,40 +197,37 @@ function TransactionTable() {
             </TableHeader>
 
             <TableBody>
-              {users?.data?.map((user: IUser) => (
-                <TableRow key={user?.id}>
+              {currentTransactions.map((transaction) => (
+                <TableRow key={transaction.id}>
                   <TableCell className='font-medium text-lg text-[#B0B0B0] text-center'>
-                    {user?.id}
+                    {transaction.id}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {user?.full_name}
+                    {transaction.name}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {user?.email}
+                    {transaction.subscription}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
-                    {user?.created_on.split("T")[0]}
+                    {transaction.date}
                   </TableCell>
                   <TableCell className='text-lg text-[#B0B0B0] text-center'>
                     <Button
                       variant='ghost'
                       size='sm'
                       className='h-8 w-8 p-0'
-                      onClick={() => openUserModal(user)}
+                      onClick={() => openUserModal(transaction)}
                     >
                       <Info className='h-6 w-6' />
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
-              {isLoading ? (
-                <div className='flex items-center justify-center py-12'></div>
-              ) : null}
             </TableBody>
           </Table>
         </div>
 
-        {/* <div className='flex items-center justify-between border-t border-gray-200 bg-[#333333] px-4 py-3 mp-6'>
+        <div className='flex items-center justify-between border-t border-gray-200 bg-[#333333] px-4 py-3 mp-6'>
           <div className='flex items-center gap-2'>
             <Button
               variant='outline'
@@ -325,67 +297,15 @@ function TransactionTable() {
               </svg>
             </Button>
           </div>
-        </div> */}
+        </div>
       </div>
 
       {isModalOpen && selectedUser && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
-          <div className='relative w-full max-w-md rounded-md bg-[#000000] px-6 py-6 shadow-lg'>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className='absolute right-4 top-4 text-gray-500 hover:text-gray-700'
-            >
-              <X className='h-5 w-5' />
-              <span className='sr-only'>Close</span>
-            </button>
-
-            <h2 className='mb-6 py-5 text-center text-[30px] font-semibold text-[#E6E6E6]'>
-              User Details
-            </h2>
-
-            <div className='space-y-6'>
-              <DetailRow label='User ID:' value={selectedUser?.id} />
-              <DetailRow label='Email' value={selectedUser?.email} />
-              <DetailRow label='User Name' value={selectedUser?.full_name} />
-              <DetailRow label='Transaction Amount' value={"amount"} />
-              <DetailRow
-                label='Subscription Status'
-                value={selectedUser?.subscription_status}
-              />
-              <div className='flex items-center justify-between border-b py-2'>
-                <label className='text-[#E6E6E6] text-xl font-medium'>
-                  Package Name
-                </label>
-
-                <Select onValueChange={(value) => setPackageName(value)}>
-                  <SelectTrigger className='w-[180px] bg-transparent text-white !border border-gray-400'>
-                    <SelectValue
-                      placeholder={
-                        selectedUser?.package_name || "Select package"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='basic' className='capitalize'>
-                      Basic
-                    </SelectItem>
-                    <SelectItem value='premium' className='capitalize'>
-                      Premium
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <Button
-              onClick={() => handleOkey(selectedUser?.id)}
-              disabled={currentStatus}
-              className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7] disabled:cursor-wait'
-            >
-              Okay
-            </Button>
-          </div>
-        </div>
+        <UserDetailsModal
+          user={selectedUser}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

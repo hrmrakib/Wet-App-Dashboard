@@ -73,19 +73,14 @@ export default function DashboardSidebar() {
               />
             </Link>
 
-            <SidebarMenu className='px-6 space-y-8'>
+            <SidebarMenu className='px-6 space-y-8 mt-6'>
               <NavItem
                 href='/'
                 icon={LayoutDashboard}
                 label='Dashboard'
                 active={pathname === "/"}
               />
-              <NavItem
-                href='/users'
-                icon={Users}
-                label='Users'
-                active={pathname === "/users" || pathname.startsWith("/users")}
-              />
+
               <NavItem
                 href='/services'
                 icon={ShieldAlert}
