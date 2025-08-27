@@ -54,7 +54,8 @@ export default function IssuesFrequent() {
       const res = await deleteItemMutation(id).unwrap();
 
       console.log(res);
-      if (res.success) {
+
+      if (res?.success) {
         await refetch();
       }
     } catch (error) {
@@ -124,7 +125,7 @@ export default function IssuesFrequent() {
                 open={showDeleteDialog}
                 onOpenChange={setShowDeleteDialog}
               >
-                <DialogContent className='bg-[#000000a9] bg-opacity-40 text-white border-zinc-700'>
+                <DialogContent className='bg-[#000000a9] bg-opacity-80 text-white border-zinc-700'>
                   <DialogHeader>
                     <DialogTitle>Delete {item?.title}</DialogTitle>
                     <DialogDescription className='text-gray-400'>

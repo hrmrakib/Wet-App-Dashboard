@@ -18,6 +18,7 @@ import {
   useDeleteServiceMutation,
   useGetAllServicesQuery,
 } from "@/redux/feature/servicesAPI";
+import { FadeLoader } from "react-spinners";
 
 interface ServicesCardProps {
   service_id: string;
@@ -38,6 +39,7 @@ export default function IssuesFrequent() {
   }
 
   const handleDelete = async (id: string) => {
+    console.log(id);
     try {
       const res = await deleteService(id).unwrap();
       await refetch();
@@ -51,6 +53,14 @@ export default function IssuesFrequent() {
 
     setShowDeleteDialog(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center py-12'>
+        <FadeLoader color='#36d7b7' />
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-black p-4 md:p-6'>
@@ -76,14 +86,14 @@ export default function IssuesFrequent() {
                 <h3 className='text-white font-bold text-lg mb-6'>
                   {service?.title}
                 </h3>
-                <div className='flex justify-center mb-2'>
+                <div className='flex justify-center mb-2 h-36'>
                   <div className='w-36 h-36 relative'>
                     <Image
                       src={`${process.env.NEXT_PUBLIC_API_URL}${service?.icon}`}
                       alt={service?.title}
                       width={164}
                       height={164}
-                      className='object-cover'
+                      className='object-cover h-36'
                     />
                   </div>
                 </div>

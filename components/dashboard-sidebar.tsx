@@ -95,63 +95,15 @@ export default function DashboardSidebar() {
                 }
               />
 
-              {/* <NavItem
-                href='/issues'
+              <NavItem
+                href='/reviews'
                 icon={ShieldAlert}
-                label='Issues Frequent'
+                label='Reviews'
                 active={
-                  pathname === "/issues" || pathname.startsWith("/issues")
+                  pathname === "/reviews" || pathname.startsWith("/reviews")
                 }
-              /> */}
+              />
 
-              {/* <NavItem
-                href='/maintenance'
-                icon={BookCheck}
-                label='Maintenance'
-                active={
-                  pathname === "/maintenance" ||
-                  pathname.startsWith("/maintenance")
-                }
-              /> */}
-
-              {/* <NavItem
-                href='/buy-products'
-                icon={ShoppingCart}
-                label='Buy Products'
-                active={
-                  pathname === "/buy-products" ||
-                  pathname.startsWith("/buy-products")
-                }
-              /> */}
-
-              {/* <NavItem
-                href='/tricks-secrets'
-                icon={Siren}
-                label='Tricks & Secrets'
-                active={
-                  pathname === "/tricks-secrets" ||
-                  pathname.startsWith("/tricks-secrets")
-                }
-              /> */}
-
-              {/* <NavItem
-                href='/pool-problem'
-                icon={BadgeAlert}
-                label='Pool Problem'
-                active={
-                  pathname === "/pool-problem" ||
-                  pathname.startsWith("/pool-problem")
-                }
-              /> */}
-              {/* <NavItem
-                href='/subscription'
-                icon={Crown}
-                label='Subscription'
-                active={
-                  pathname === "/subscription" ||
-                  pathname.startsWith("/subscription")
-                }
-              /> */}
               <NavItem
                 href='/setting'
                 icon={Settings}

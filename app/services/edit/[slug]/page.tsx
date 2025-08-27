@@ -16,10 +16,12 @@ export default function EditService() {
   const [description, setDescription] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [externalSourceTitle, setExternalSourceTitle] = useState("");
-  const [premium, setPremium] = useState(false);
+  const [premium, setPremium] = useState<boolean | "">("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const params = useParams();
+
+  console.log({ state: premium });
 
   const {
     data: serviceData,
@@ -27,7 +29,9 @@ export default function EditService() {
     refetch,
   } = useGetServiceByIdQuery(params?.slug as string);
 
-  const [updateService] = useUpdateServiceMutation();
+  const [updateService, { isLoading: isUpdating }] = useUpdateServiceMutation();
+
+  console.log("is_premium", serviceData?.service?.is_premium);
 
   useEffect(() => {
     if (serviceData) {
@@ -36,7 +40,7 @@ export default function EditService() {
       setDescription(service?.short_description);
       setWebsiteUrl(service?.external_source_url);
       setExternalSourceTitle(service?.external_source_title);
-      setPremium(service?.is_premium === "true");
+      setPremium(service?.is_premium);
 
       if (service?.icon) {
         setImagePreview(`${process.env.NEXT_PUBLIC_API_URL}${service.icon}`);
@@ -62,8 +66,6 @@ export default function EditService() {
     }
   };
   const handleSubmit = async () => {
-    // In a real app, you would save the changes to a database
-
     const formData = new FormData();
 
     formData.append("title", title);
@@ -71,7 +73,7 @@ export default function EditService() {
     formData.append("external_source_url", websiteUrl);
     formData.append("external_source_title", externalSourceTitle);
     formData.append("type", "service");
-    formData.append("is_premium", premium ? "true" : "false");
+    formData.append("is_premium", premium.toString());
 
     if (image) {
       formData.append("icon", image);
@@ -82,6 +84,7 @@ export default function EditService() {
         data: formData,
         id: params?.slug as string,
       }).unwrap();
+      console.log({ response });
 
       if (response?.status === "success") {
         toast.success("Service updated successfully!");
@@ -110,9 +113,10 @@ export default function EditService() {
           <button
             type='submit'
             onClick={handleSubmit}
-            className='bg-cyan-400 hover:bg-cyan-500 text-black font-medium px-6 py-2 rounded-full transition-colors'
+            disabled={isUpdating}
+            className='bg-cyan-400 hover:bg-cyan-500 text-black font-medium px-6 py-2 rounded-full transition-colors disabled:cursor-not-allowed'
           >
-            Update
+            {isUpdating ? "Updating..." : "Update"}
           </button>
         </div>
 
@@ -209,7 +213,7 @@ export default function EditService() {
                 <input
                   id='premium'
                   type='checkbox'
-                  checked={premium}
+                  checked={premium === true}
                   onChange={(e) => setPremium(e.target.checked)}
                   className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
                 />
@@ -221,7 +225,7 @@ export default function EditService() {
                 <input
                   id='not-premium'
                   type='checkbox'
-                  checked={!premium}
+                  checked={premium === false}
                   onChange={(e) => setPremium(!e.target.checked)}
                   className='h-4 w-4 text-cyan-400 border-gray-300 rounded focus:ring-cyan-500'
                 />

@@ -21,7 +21,22 @@ const authAPI = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    updateUserProfile: builder.mutation<any, any>({
+      query: ({ id, data }) => ({
+        url: `/api-auth/single_user/${id}/`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery, useGetUserByIdQuery } = authAPI;
+export const {
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useUpdateUserProfileMutation,
+} = authAPI;

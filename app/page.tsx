@@ -156,10 +156,6 @@ function TransactionTable() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTransactions = transactions.slice(startIndex, endIndex);
-  const [selectedYear, setSelectedYear] = useState("2025");
-  const [chartData, setChartData] = useState<
-    { month: string; amount: number }[]
-  >([]);
 
   const openUserModal = (user: any) => {
     setSelectedUser(user);

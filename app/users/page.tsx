@@ -15,8 +15,19 @@ import UserDetailsModal from "@/components/user-details-modal";
 import {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
+  useUpdateUserProfileMutation,
 } from "@/redux/feature/userAPI";
 import DetailRow from "@/components/DetailRow";
+import { Switch } from "@/components/ui/switch";
+import { FadeLoader } from "react-spinners";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface IUser {
   id: number;
@@ -39,10 +50,11 @@ function TransactionTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Configurable items per page
-  const { data: users, isLoading } = useGetAllUsersQuery({});
-
-  console.log(users, "users");
+  const [packageName, setPackageName] = useState("");
+  const [itemsPerPage] = useState(10);
+  const [currentStatus, setCurrentStatus] = useState(false);
+  const { data: users, isLoading, refetch } = useGetAllUsersQuery({});
+  const [updateUserProfileMutation] = useUpdateUserProfileMutation();
 
   const transactions = [
     {
@@ -148,9 +160,42 @@ function TransactionTable() {
     }
   };
 
+  const handleOkey = async (id: number) => {
+    if (!selectedUser) return;
+    setCurrentStatus(true);
+
+    const updatedData = {
+      package_name: packageName,
+      subscription_status: "subscribed",
+    };
+
+    try {
+      const res = await updateUserProfileMutation({
+        id,
+        data: updatedData,
+      }).unwrap();
+      if (res?.status === "success") {
+        setIsModalOpen(false);
+        refetch();
+      }
+    } catch (error) {
+      console.error("Failed to update user profile:", error);
+    } finally {
+      setCurrentStatus(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center justify-center py-12'>
+        <FadeLoader color='#36d7b7' />
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className='overflow-hidden bg-[#333333] rounded-md'>
+      <div className='overflow-hidden bg-[#333333] rounded-md animate-spi'>
         <h2 className='text-[32px] font-medium text-[#E6E6E6] p-6'>
           User List
         </h2>
@@ -203,6 +248,9 @@ function TransactionTable() {
                   </TableCell>
                 </TableRow>
               ))}
+              {isLoading ? (
+                <div className='flex items-center justify-center py-12'></div>
+              ) : null}
             </TableBody>
           </Table>
         </div>
@@ -304,15 +352,35 @@ function TransactionTable() {
                 label='Subscription Status'
                 value={selectedUser?.subscription_status}
               />
-              <DetailRow
-                label='Package Name'
-                value={selectedUser?.package_name}
-              />
+              <div className='flex items-center justify-between border-b py-2'>
+                <label className='text-[#E6E6E6] text-xl font-medium'>
+                  Package Name
+                </label>
+
+                <Select onValueChange={(value) => setPackageName(value)}>
+                  <SelectTrigger className='w-[180px] bg-transparent text-white !border border-gray-400'>
+                    <SelectValue
+                      placeholder={
+                        selectedUser?.package_name || "Select package"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='basic' className='capitalize'>
+                      Basic
+                    </SelectItem>
+                    <SelectItem value='premium' className='capitalize'>
+                      Premium
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <Button
-              onClick={() => setIsModalOpen(false)}
-              className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7]'
+              onClick={() => handleOkey(selectedUser?.id)}
+              disabled={currentStatus}
+              className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7] disabled:cursor-wait'
             >
               Okay
             </Button>
